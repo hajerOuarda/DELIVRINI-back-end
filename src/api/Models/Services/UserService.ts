@@ -1,36 +1,145 @@
-import { Request, Response, Router } from "express";
+import e, { NextFunction, Request, Response, Router } from "express";
+import { DestroyOptions } from "sequelize";
+import { UpdateOptions } from "sequelize";
 import { User } from "../Entities/user";
-import { UserRepository } from "../Repositories/UserRepository";
- 
- 
-export class UserService {
-  private userRepository: UserRepository;
-  
-  private static _user: any;
+import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
+import { PRIVATE_KEY } from "../../config/jwt/auth.config";
+import bcrypt from "bcrypt";
 
-  constructor() {
-    this.userRepository = new UserRepository();
-  }
+const signOptions: SignOptions = {
+  algorithm: "RS256",
+  expiresIn: "2h",
+};
 
-   
+const verifyOptions: VerifyOptions = {
+  algorithms: ["RS256"],
+};
 
-  /** CRUD  */
+const signup = (req: Request, res: Response, next: NextFunction) => {
+  console.log("sign me up ");
+  const { email, password }: any = req.body;
+  User.count({ where: { email: email } }).then((_emailExisted) => {
+    if (_emailExisted != 0) {
+      res.status(500).json({
+        message: "User already existed",
+      });
+      next({ message: "User already existed" });
+      return;
+    }
 
-  async findAll() {
-    return this.userRepository.findAll();
-  }
+    bcrypt
+      .hash(password, 10)
+      .then((hash) => {
+        const user = new User({
+          email: email,
+          motDePass: hash,
+        });
+        user
+          .save()
+          .then(() => {
+            res.status(201).json({
+              message: "User added successfully!",
+            });
+            next();
+          })
+          .catch((error) => {
+            res.status(500).json({
+              error: error.message,
+            });
+          });
+      })
+      .catch((err: Error) => {
+        res.status(401).json(err.message);
+      });
+  });
+};
+const login = (req: Request, res: Response, next: NextFunction) => {
+  const { email, password }: any = req.body;
+  User.findOne({ where: { email: email } })
+    .then((user) => {
+      if (!user) {
+        res.status(401).json({
+          error: "User not found!",
+        });
+        next("User not found!");
+        return;
+      }
 
-  async findOne(userId: string) {
-    return await this.userRepository.findOne(userId);
-  }
-  async create(user: User) {
-    return await this.userRepository.create(user);
-  }
+      bcrypt
+        .compare(password, user.motDePass)
+        .then((valid) => {
+          if (!valid) {
+            return res.status(401).json({
+              error: {
+                type: "invalid_credentials",
+                message: "Invalid Password",
+              },
+            });
+          }
+          const token = jwt.sign({ userId: user.id }, PRIVATE_KEY, signOptions);
+          res.status(200).json({
+            userId: user.id,
+            token: token,
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error: error,
+          });
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        error: error,
+      });
+    });
+};
 
-  async update(user: User, id: string) {
-    return await this.userRepository.update(user, id);
-  }
-  async delete(id: string) {
-    return await this.userRepository.delete(id);
-  }
+/** CRUD  */
+
+function findAll(): Promise<User[]> {
+  return User.findAll<User>();
 }
+
+function findOneUser(userId: string): Promise<User | null> {
+  return User.findByPk<User>(userId);
+}
+
+async function createUser(user: any): Promise<User | null> {
+  const params = user;
+
+  return User.create<User>(params);
+}
+
+async function updateUser(user: User, id: string) {
+  const userId = id;
+  const params = user;
+  console.log(userId);
+
+  const options: UpdateOptions = {
+    where: { id: userId },
+    limit: 1,
+  };
+
+  User.update(params, options);
+}
+
+async function deleteUser(userId: string) {
+  const options: DestroyOptions = {
+    where: { id: userId },
+    limit: 1,
+  };
+
+  return User.destroy(options);
+}
+
+export {
+  findAll,
+  findOneUser,
+  createUser,
+  updateUser,
+  deleteUser,
+  login,
+  signup,
+  verifyOptions
+};
