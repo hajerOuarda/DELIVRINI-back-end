@@ -14,7 +14,8 @@ Role.init(
     //   primaryKey:true
     // },
     nomRole: {
-      type: Sequelize.STRING,
+      type: Sequelize.ENUM("Admin", "client", "Livreur"),
+      // type:Sequelize.STRING
     },
   },
   {

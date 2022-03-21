@@ -3,32 +3,28 @@ import my_Database from "../../../database/database";
 import * as bcrypt from "bcrypt";
 import { Role } from "./role";
 
-
 export class User extends Model {
   id!: number;
-  public nom!: string;
-  public prenom!: string;
-  public login!: string;
-  public motDepass!: string;
-  public email!: string;
-  public telephone!: string;
-  public role!: string;
-   
+  nom!: string;
+  prenom!: string;
+  login!: string;
+  motDePass!: string;
+  email!: string;
+  telephone!: string;
+  role!: string;
 }
 
 User.init(
-  {
+  { 
     nom: {
       type: Sequelize.STRING,
-      
     },
     prenom: {
       type: Sequelize.STRING,
-      
     },
     login: {
       type: Sequelize.STRING,
-      },
+    },
     motDePass: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -39,10 +35,6 @@ User.init(
     },
     telephone: {
       type: Sequelize.STRING,
-      
-    },
-    role: {
-      type: Sequelize.STRING,
     },
   },
   {
@@ -51,5 +43,4 @@ User.init(
   }
 );
 
- 
-User.belongsToMany(Role, { through: "user_roles" });
+User.belongsTo(Role, { as: "role" });
