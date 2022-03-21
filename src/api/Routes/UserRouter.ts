@@ -1,21 +1,13 @@
-import express, { Request, Response, Router } from "express"; 
-import { UserController } from "../Controllers/UserController";
- 
-export class UserRouter {
-  public userController: UserController  ;
-  user_Route: Router ;
+import { Router } from "express";
+import UserController from "../Controllers/UserController";
+import { auth } from "../middlewares/auth";
+import { signup } from "../Models/Services/UserService";
+  
+const config = (): Router => {
+  const route: Router = Router();
+    route.use("/",UserController);
 
-  constructor(router: Router) {
-    this.user_Route = router;
-    this.userController = new UserController(this.user_Route);
-  }
+  return route;
+};
 
-  processUserRouting() {
-    this.user_Route.get("/users"  ,() => {
-      this.userController.controllerRoutes();
-    });
-   
-
-    return this.user_Route;
-  }
-}
+export default config();

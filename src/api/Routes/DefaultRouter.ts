@@ -1,22 +1,23 @@
-import express, { Request, Response, Router } from "express";
-import { ClientRouter } from "./ClientRouter";
-import { UserRouter } from "./UserRouter";
+import { Router, Request, Response } from "express";
+import { test } from "../middlewares/auth";
+import { login, signup } from "../Models/Services/UserService";
+import userRouter from "./UserRouter";
 
-export class DefaultRouter {
-  default_router: Router;
-  userRouter: UserRouter;
-  // clientRouter: ClientRouter;
-  constructor(router: Router) {
-    this.default_router = router;
-    this.userRouter = new UserRouter(this.default_router);
-    // this.clientRouter = new ClientRouter(this.default_router);
-  }
+const configRouters = (): Router => {
+  const router: Router = Router();
+  // midellware
 
-  processDefaultRouting() {
-    this.default_router
-      .use("/users", this.userRouter.processUserRouting())
-      // .use("/clients", this.clientRouter.processClientRouting());
+  router.use("/signup", (req: Request, resp: Response, next) => {
+    signup(req, resp, next);
+  });
 
-    return this.default_router;
-  }
-}
+  router.use("/login", (req: Request, resp: Response, next) => {
+    login(req, resp, next);
+  });
+
+  router.use("/users", userRouter);
+
+  return router;
+};
+
+export default configRouters();

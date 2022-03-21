@@ -25,7 +25,7 @@ const dbInit = () => {
     .catch((err: Error) => {
       console.error(" !! ERROR - Unable to sync database!! :", err.message);
     });
-
+    
   //  Promise.all([
   //    User.sync({ force: true}),
   //    Role.sync({alter:true})

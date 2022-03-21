@@ -1,21 +1,17 @@
-import express, { Router, Express } from "express";
+import express, { Express } from "express";
 import dbInit from "./database/init";
 import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
-import { DefaultRouter } from "./api/Routes/DefaultRouter";
- 
+import defaultRouter from "./api/Routes/DefaultRouter";
+
 export class Application {
   public app: Express;
-  public defaultRouter: DefaultRouter;
-  public mainRouter!: Router;
   constructor() {
     this.app = express();
-    this.mainRouter = express.Router();
-    this.defaultRouter = new DefaultRouter(this.mainRouter);
     this.config();
     dbInit();
     // this.app.use(tokenGuard())
-     this.run();
+    this.run();
   }
 
   private config(): void {
@@ -34,12 +30,7 @@ export class Application {
     } catch (error: any) {
       console.log(`Error occurred: ${error.message}`);
     }
-    
-      this.app.use(
-        "/apiDelivrini",
-        this.defaultRouter.processDefaultRouting()
-      );
-
+    this.app.use("/apiDelivrini", defaultRouter);
   }
 }
 
