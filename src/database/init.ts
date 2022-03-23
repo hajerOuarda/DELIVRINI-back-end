@@ -1,4 +1,4 @@
-  import { Role } from "../api/Models/Entities/role";
+import { Role } from "../api/Models/Entities/role";
 import { User } from "../api/Models/Entities/user";
 import my_Database from "./database";
 
@@ -25,13 +25,14 @@ const dbInit = () => {
     .catch((err: Error) => {
       console.error(" !! ERROR - Unable to sync database!! :", err.message);
     });
-    
-  //  Promise.all([
-  //    User.sync({ force: true}),
-  //    Role.sync({alter:true})
-  //  ]);
 
+  // Promise.all([Role.sync({ alter: true }), User.sync({ alter: true })])
+  //   .then(() => {
+  //     console.info("INFO - Database has been synced");
+  //   })
+  //   .catch((err: Error) => {
+  //     console.error(" !! ERROR - Unable to sync database!! :", err.message);
+  //   });
 };
- 
 
 export default dbInit;

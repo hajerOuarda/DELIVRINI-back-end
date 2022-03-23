@@ -1,83 +1,79 @@
-
 // import { Role } from "../Models/Entities/role";
 // import { User } from "../Models/Entities/user";
 
+import { NextFunction, Request, Response } from "express";
+import { User } from "../Models/Entities/user";
 
- 
+const isClient = (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.body.userId;
+  User.findByPk(userId)
+    .then((user) => {
+      if (user?.getDataValue("fk_role") === "client") {
+        const role = user?.getDataValue("fk_role");
+        res.status(200).json({
+          access_granted: "you are ".concat(user?.getDataValue("fk_role")),
+        });
+          next();
+      }
+    })
+    .catch((error) => {
+      res.status(403).send({
+        error: error.mesage,
+        message: "you're not client , this Require Client Role!",
+      });
+    });
+};
 
-// const isAdmin = async (req: any, res: any, next: any) => {
-//   try {
-//     const user = await User.findByPk(req.userId) as User;
+const isAdmin =   (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.body.userId;
+  User.findByPk(userId)
+    .then((user) => {
+      if (user?.getDataValue("fk_role") === "admin") {
+        // const role = user?.getDataValue("fk_role");
+        // res.status(200).json({
+        //   access_granted: "you are ".concat(role),
+        // })
+            return next();
+      } else {
+        res.status(403).send({
+          error: "you're not Admin , this Require Admin Role!",
+        });
      
-//     const roles []=  User.getAttributes().role.values ;
+      }
+      
+       
+    })
+    .catch((error) => {
+      res.status(403).send({
+        error: error.mesage,
+        message: "you're not Admin , this Requires Admin Role!",
+      });
+    });
+};
 
+const isChef = (req: Request, res: Response, next: NextFunction) => {
+ const userId = req.body.userId;
+ User.findByPk(userId)
+   .then((user) => {
+     if (user?.getDataValue("fk_role") === "chef") {
+       const role = user?.getDataValue("fk_role");
+       res.status(200).json({
+         access_granted: "you are ".concat(user?.getDataValue("fk_role")),
+       });
+       return next();
+     } else {
+       res.status(403).send({
+         error: "you're not Chef , this Requires Chef Role!",
+       });
+       return next();
+     }
+   })
+   .catch((error) => {
+     res.status(403).send({
+       error: error.mesage,
+       message: "you're not Admin , this Requires Chef Role!",
+     });
+   });
+};
 
-//     for (let i = 0; i < roles.length; i++) {
-//       if (roles[i].name === "admin") {
-//         return next();
-//       }
-//     }
-
-//     return res.status(403).send({
-//       message: "Require Admin Role!",
-//     });
-//   } catch (error) {
-//     return res.status(500).send({
-//       message: "Unable to validate User role!",
-//     });
-//   }
-// };
-
-// isClient = async (req: any, res: any, next: any) => {
-//   try {
-//     const user = await User.findByPk(req.userId);
-//     const roles = await user.getRoles();
-
-//     for (let i = 0; i < roles.length; i++) {
-//       if (roles[i].name === "moderator") {
-//         return next();
-//       }
-//     }
-
-//     return res.status(403).send({
-//       message: "Require Moderator Role!",
-//     });
-//   } catch (error) {
-//     return res.status(500).send({
-//       message: "Unable to validate Moderator role!",
-//     });
-//   }
-// };
-
-// isModeratorOrAdmin = async (req, res, next) => {
-//   try {
-//     const user = await User.findByPk(req.userId);
-//     const roles = await User.getAttributes().nomRole.values;
-
-//     for (let i = 0; i < roles.length; i++) {
-//       if (roles[i].name === "moderator") {
-//         return next();
-//       }
-
-//       if (roles[i].name === "admin") {
-//         return next();
-//       }
-//     }
-
-//     return res.status(403).send({
-//       message: "Require Moderator or Admin Role!",
-//     });
-//   } catch (error) {
-//     return res.status(500).send({
-//       message: "Unable to validate Moderator or Admin role!",
-//     });
-//   }
-// };
-
-// const authJwt = {
-//   verifyToken,
-//   isAdmin,
-//   isModerator,
-//   isModeratorOrAdmin,
-// };
-// module.exports = authJwt;
+export { isClient, isChef, isAdmin };

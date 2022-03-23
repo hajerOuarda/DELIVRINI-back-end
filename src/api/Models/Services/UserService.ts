@@ -16,8 +16,7 @@ const verifyOptions: VerifyOptions = {
 };
 
 const signup = (req: Request, res: Response, next: NextFunction) => {
-  console.log("sign me up ");
-  const { email, password }: any = req.body;
+  const { name, lastname, phone, email, password, role_name }: any = req.body;
   User.count({ where: { email: email } }).then((_emailExisted) => {
     if (_emailExisted != 0) {
       res.status(500).json({
@@ -32,13 +31,17 @@ const signup = (req: Request, res: Response, next: NextFunction) => {
       .then((hash) => {
         const user = new User({
           email: email,
-          motDePass: hash,
+          password: hash,
+          name: name,
+          lastname: lastname,
+          phone: phone,
+          fk_role: role_name,
         });
         user
           .save()
           .then(() => {
             res.status(201).json({
-              message: "User added successfully!",
+              message: "User Registered successfully!",
             });
             next();
           })
@@ -66,7 +69,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       }
 
       bcrypt
-        .compare(password, user.motDePass)
+        .compare(password, user.password)
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({
@@ -77,20 +80,23 @@ const login = (req: Request, res: Response, next: NextFunction) => {
             });
           }
           const token = jwt.sign({ userId: user.id }, PRIVATE_KEY, signOptions);
-          res.status(200).json({
+          return res.status(200).json({
+            message: "** login succesful !",
             userId: user.id,
-            token: token,
+            accessToken: token,
           });
         })
         .catch((error) => {
           res.status(500).json({
-            error: error,
+            error: {
+              mesage: "error in password",
+            },
           });
         });
     })
     .catch((error) => {
       res.status(500).json({
-        error: error,
+        error: error.message,
       });
     });
 };
@@ -105,10 +111,10 @@ function findOneUser(userId: string): Promise<User | null> {
   return User.findByPk<User>(userId);
 }
 
-async function createUser(user: any): Promise<User | null> {
+async function createUser(user: any) {
   const params = user;
-
-  return User.create<User>(params);
+  User.create<User>(params)
+     
 }
 
 async function updateUser(user: User, id: string) {
@@ -141,5 +147,5 @@ export {
   deleteUser,
   login,
   signup,
-  verifyOptions
+  verifyOptions,
 };

@@ -1,46 +1,47 @@
 import Sequelize, { Model } from "sequelize";
 import my_Database from "../../../database/database";
-import * as bcrypt from "bcrypt";
 import { Role } from "./role";
+
 
 export class User extends Model {
   id!: number;
-  nom!: string;
-  prenom!: string;
-  login!: string;
-  motDePass!: string;
+  name!: string;
+  lastname!: string;
+  password!: string;
   email!: string;
-  telephone!: string;
+  phone!: string;
   role!: string;
 }
 
 User.init(
-  { 
-    nom: {
+  {
+    name: {
       type: Sequelize.STRING,
     },
-    prenom: {
+    lastname: {
       type: Sequelize.STRING,
     },
-    login: {
-      type: Sequelize.STRING,
-    },
-    motDePass: {
+    password: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     email: {
       type: Sequelize.STRING,
       allowNull: false,
+      unique:true
     },
-    telephone: {
+    phone: {
       type: Sequelize.STRING,
     },
   },
   {
     sequelize: my_Database,
-    tableName: "user",
+    // tableName: "user",
   }
 );
 
-User.belongsTo(Role, { as: "role" });
+User.belongsTo(Role, {
+  foreignKey: "fk_role",
+  onDelete: "SET NULL",
+  targetKey: "roleName",
+});

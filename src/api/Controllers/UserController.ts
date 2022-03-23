@@ -62,6 +62,6 @@ userControllerRouter.delete("/:id", (req: Request, res: Response) => {
     })
     .catch((err: Error) => res.status(500).json(err.message));
 });
-
-userControllerRouter.get("/signup", signup);
+ 
 export default userControllerRouter;
+
