@@ -6,7 +6,7 @@ import {
   deleteUser,
   findAll,
   findOneUser,
-  signup,
+  sendEmail,
   updateUser,
 } from "../Models/Services/UserService";
 
@@ -44,7 +44,7 @@ userControllerRouter.post("/", (req: Request, res: Response) => {
 });
 userControllerRouter.patch("/:id", (req: Request, res: Response) => {
   updateUser(req.body, req.params.id)
-    .then((updatedUser: any) => {
+    .then(() => {
       res.status(202).send({
         message: "** user succesfully updated **",
       });
@@ -62,6 +62,6 @@ userControllerRouter.delete("/:id", (req: Request, res: Response) => {
     })
     .catch((err: Error) => res.status(500).json(err.message));
 });
+
  
 export default userControllerRouter;
-
