@@ -1,7 +1,7 @@
 import Sequelize, { Model } from "sequelize";
 import my_Database from "../../../database/database";
 import { Role } from "./role";
-
+import { Token } from "./token";
 
 export class User extends Model {
   id!: number;
@@ -28,9 +28,22 @@ User.init(
     email: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique:true
+      unique: "email",
     },
     phone: {
+      type: Sequelize.STRING,
+    },
+    address: {
+      type: Sequelize.STRING,
+    },
+    zipCode: {
+      type: Sequelize.STRING,
+    },
+    street: {
+      type: Sequelize.STRING,
+    },
+    statusDM: {
+      // delivery man status
       type: Sequelize.STRING,
     },
   },
@@ -45,3 +58,5 @@ User.belongsTo(Role, {
   onDelete: "SET NULL",
   targetKey: "roleName",
 });
+
+User.hasOne(Token,{foreignKey : "userId"});
