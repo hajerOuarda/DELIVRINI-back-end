@@ -9,11 +9,13 @@ export class Role extends Model {
 Role.init(
   {
     roleName: {
-      type: Sequelize.ENUM("admin", "client","chef"),
-      unique: true,
+      type: Sequelize.ENUM("admin", "client","chef","deliveryMan"),
+      unique: "roleName",
       // defaultValue: "admin",
     },
+    
   },
+
   {
     sequelize: my_Database,
     // tableName: "roles",
