@@ -4,7 +4,7 @@ import {
   requestPasswordReset,
   resetPassword,
   signup,
-} from "../Models/Services/UserService";
+} from "../Services/UserService";
 
 const authControllerRouter = Router();
 

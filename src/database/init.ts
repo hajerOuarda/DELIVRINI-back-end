@@ -1,6 +1,4 @@
-import { Role } from "../api/Models/Entities/role";
-import { User } from "../api/Models/Entities/user";
-import my_Database from "./database";
+ import my_Database from "./database";
 
 const isDev = process.env.NODE_ENV === "development";
 

@@ -1,6 +1,6 @@
 import Sequelize, { Model } from "sequelize";
-import my_Database from "../../../database/database";
- 
+import my_Database from "../../database/database";
+  
 export class Role extends Model {
     id!: string;
     roleName!: string;

@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { DestroyOptions, Error } from "sequelize";
 import { UpdateOptions } from "sequelize";
-import { User } from "../Entities/user";
+import { User } from "../Models/user";
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
-import { PRIVATE_KEY } from "../../config/jwt/auth.config";
+import { PRIVATE_KEY } from "../config/jwt/auth.config";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
-import { Token } from "../Entities/token";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import Handlebars from "handlebars";
- 
+import { Token } from "../Models/token";
+
 //** */
 const signOptions: SignOptions = {
   algorithm: "RS256",
@@ -55,8 +55,7 @@ const signup = (req: Request, res: Response, next: NextFunction) => {
             next();
           })
           .catch((error) => {
-            console.log("saving user error");
-
+ 
             res.status(500).json({
               error: error.message,
             });
@@ -150,8 +149,7 @@ const sendEmail = async (
 
     return url;
   } catch (error) {
-    console.log(error);
-  }
+   }
 };
 
 const requestPasswordReset = (
@@ -160,8 +158,7 @@ const requestPasswordReset = (
   next: NextFunction
 ) => {
   const email = req.body.email;
-  console.log(email);
-
+ 
   User.findOne({ where: { email: email } })
     .then((user) => {
       Token.findOne({ where: { userId: user!.id } })
@@ -194,12 +191,10 @@ const requestPasswordReset = (
               });
             })
             .catch((error) => {
-              return res
-                .status(500)
-                .json({
-                  message: "error sending the email",
-                  erroe: error.message,
-                });
+              return res.status(500).json({
+                message: "error sending the email",
+                erroe: error.message,
+              });
             });
         })
         .catch((error) => {
@@ -221,8 +216,7 @@ const resetPassword = async (
   const userId = req.query.id as any;
   const token = req.query.token as any,
     password = req.body.password!;
-  console.log("userId:", userId);
-
+ 
   Token.findOne({ where: { userId: userId } })
     .then((passwordResetToken) => {
       bcrypt
@@ -265,7 +259,7 @@ const resetPassword = async (
 
 /** CRUD  */
 
-function findAll(): Promise<User[]> {
+function findAllUsers(): Promise<User[]> {
   return User.findAll<User>();
 }
 
@@ -273,22 +267,21 @@ function findOneUser(userId: string): Promise<User | null> {
   return User.findByPk<User>(userId);
 }
 
-async function createUser(user: any) {
+  function createUser(user: any) {
   const params = user;
-  User.create<User>(params);
+ return  User.create<User>(params);
 }
 
-async function updateUser(user: User, id: string) {
+  function updateUser(user: User, id: string) {
   const userId = id;
   const params = user;
-  console.log(userId);
-
+ 
   const options: UpdateOptions = {
     where: { id: userId },
     limit: 1,
   };
 
-  User.update(params, options);
+  return User.update(params, options);
 }
 
 async function deleteUser(userId: string) {
@@ -298,10 +291,10 @@ async function deleteUser(userId: string) {
   };
 
   return User.destroy(options);
-}
+} 
 
 export {
-  findAll,
+  findAllUsers,
   findOneUser,
   createUser,
   updateUser,
@@ -312,14 +305,7 @@ export {
   sendEmail,
   requestPasswordReset,
   resetPassword,
+  
 };
 
-// .then((info) => {
-//       const url = nodemailer.getTestMessageUrl(info) as string;
-//       // console.log("URL --- : ", url);
-
-//       return url;
-//     })
-//     .catch(() => {
-//       throw new Error(" error sanding mail");
-//     });
+ 
