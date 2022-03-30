@@ -47,4 +47,18 @@ export const message = {
       not_deleted: "restaurantCategory doesn't exist to be deleted",
     },
   },
+  role: {
+    admin: {
+      access_not_granted: "you're not Admin , this Require Admin Role!",
+    },
+    client: {
+      access_not_granted: "you're not Client , this Require Client Role!",
+    },
+    chef: {
+      access_not_granted: "you're not a Chef , this Requires Chef Role!",
+    },
+    deliveryMan: {
+      access_not_granted: "you're not a Delivery Man , this Require Delivery Man Role!",
+    },
+  },
 };

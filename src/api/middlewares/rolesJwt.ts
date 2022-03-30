@@ -24,6 +24,7 @@ const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => {
       res.status(404).send({
         error: error.mesage,
+        message: message.role.client.access_not_granted,
       });
     });
 };
@@ -34,6 +35,8 @@ const checkIsAdmin = (req: Request, res: Response, next: NextFunction) => {
   User.findByPk(userId)
     .then((user) => {
       if (user?.getDataValue("fk_role") === "admin") {
+        
+        return next();
       } else {
         res.status(403).send({
           error: message.role.admin.access_not_granted,
@@ -44,6 +47,7 @@ const checkIsAdmin = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => {
       res.status(404).send({
         error: error.mesage,
+         
       });
     });
 };
@@ -67,6 +71,7 @@ const checkIsChef = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => {
       res.status(404).send({
         error: error.mesage,
+        
       });
     });
 };
