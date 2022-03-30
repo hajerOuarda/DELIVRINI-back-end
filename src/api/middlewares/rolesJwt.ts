@@ -2,6 +2,7 @@
 // import { User } from "../Models/Entities/user";
 
 import { NextFunction, Request, Response } from "express";
+import { message } from "../Constants/constants";
 import { User } from "../Models/Entities/user";
 
 const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +20,7 @@ const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => {
       res.status(403).send({
         error: error.mesage,
-        message: "you're not client , this Require Client Role!",
+        message: message.role.client.access_not_granted,
       });
     });
 };
@@ -31,21 +32,18 @@ const checkIsAdmin = (req: Request, res: Response, next: NextFunction) => {
   User.findByPk(userId)
     .then((user) => {
       if (user?.getDataValue("fk_role") === "admin") {
-        // const role = user?.getDataValue("fk_role");
-        // res.status(200).json({
-        //   access_granted: "you are ".concat(role),
-        // })
+        
         return next();
       } else {
         res.status(403).send({
-          error: "you're not Admin , this Require Admin Role!",
+          error: message.role.admin.access_not_granted,
         });
       }
     })
     .catch((error) => {
       res.status(403).send({
         error: error.mesage,
-        message: "you're not Admin , this Requires Admin Role!",
+         
       });
     });
 };
@@ -62,7 +60,7 @@ const checkIsChef = (req: Request, res: Response, next: NextFunction) => {
         return next();
       } else {
         res.status(403).send({
-          error: "you're not Chef , this Requires Chef Role!",
+          error: message.role.chef.access_not_granted,
         });
         return next();
       }
@@ -70,9 +68,34 @@ const checkIsChef = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => {
       res.status(403).send({
         error: error.mesage,
-        message: "you're not Admin , this Requires Chef Role!",
+        
       });
     });
 };
 
-export { checkIsClient, checkIsChef, checkIsAdmin };
+const checkIsDeliveryMan = (req: Request, res: Response, next: NextFunction) => {
+  const userId = (<any>req).userId;
+  User.findByPk(userId)
+    .then((user) => {
+      if (user?.getDataValue("fk_role") === "deliveryMan") {
+        const role = user?.getDataValue("fk_role");
+        res.status(200).json({
+          access_granted: "you are ".concat(user?.getDataValue("fk_role")),
+        });
+        return next();
+      } else {
+        res.status(403).send({
+          error: message.role.chef.access_not_granted,
+        });
+        return next();
+      }
+    })
+    .catch((error) => {
+      res.status(403).send({
+        error: error.mesage,
+      });
+    });
+};
+
+
+export { checkIsClient, checkIsChef, checkIsAdmin, checkIsDeliveryMan };
