@@ -1,19 +1,19 @@
-import { NextFunction, Request, Response, Router } from "express";
-import { User } from "../Models/Entities/user";
+import { Request, Response, Router } from "express";
+import { message } from "../Constants/constants";
+import { User } from "../Models/user";
 
 import {
   createUser,
   deleteUser,
-  findAll,
+  findAllUsers,
   findOneUser,
-  sendEmail,
   updateUser,
-} from "../Models/Services/UserService";
+} from "../Services/UserService";
 
 const userControllerRouter = Router();
 
 userControllerRouter.get("/all", (req: Request, res: Response) => {
-  findAll()
+  findAllUsers()
     .then((users: Array<User>) => {
       res.send(users);
     })
@@ -25,16 +25,18 @@ userControllerRouter.get("/:id", (req: Request, res: Response) => {
   findOneUser(req.params.id)
     .then((user: User | null) => {
       if (user) {
-        res.json({ user_found: user });
-      } else res.status(404).json({ errors: ["User not found"] });
+        return res.status(200).json({ user_found: user });
+      } else
+        return res.status(404).json({ errors: message.user.error.not_found });
     })
     .catch((err: Error) => res.status(500).json(err.message));
 });
+
 userControllerRouter.post("/", (req: Request, res: Response) => {
   createUser(req.body)
     .then((user: any) => {
       res.send({
-        message: "** user succesfully created **",
+        message: message.user.success.created,
         user,
       });
     })
@@ -44,24 +46,34 @@ userControllerRouter.post("/", (req: Request, res: Response) => {
 });
 userControllerRouter.patch("/:id", (req: Request, res: Response) => {
   updateUser(req.body, req.params.id)
-    .then(() => {
-      res.status(202).send({
-        message: "** user succesfully updated **",
-      });
+    .then((nbrRaw) => {
+      if (nbrRaw[0])
+        res.status(200).send({
+          message: message.user.success.updated,
+        });
+      else
+        res.status(404).send({
+          message: message.user.error.not_updated,
+        });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err.message);
     });
 });
 userControllerRouter.delete("/:id", (req: Request, res: Response) => {
   const id = req.params.id;
   deleteUser(id)
-    .then(() => {
-      if (id) res.status(202).json({ message: "user deleted id", id });
-      else res.status(404).json({ errors: ["User doesn't exist"] });
+    .then((nbrRaw) => {
+      if (nbrRaw)
+        res.status(200).json({ message: message.user.success.deleted, id });
+      else
+        res.status(404).json({
+          message: message.user.error.not_deleted,
+        });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => {
+      res.json({ error: err.message });
+    });
 });
 
- 
 export default userControllerRouter;

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { PUBLIC_KEY } from "../config/jwt/auth.config";
-import { User } from "../Models/Entities/user";
-import { verifyOptions } from "../Models/Services/UserService";
+import { User } from "../Models/user";
+import { verifyOptions } from "../Services/UserService";
 
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,9 +24,11 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
           error: { type: "unauthorized", message: "Authentication Failed" },
         });
       });
-  } catch {
+  } catch (error:any) {
     return res.status(500).json({
-      error: "Invalid request!",
+      message: "Invalid Token! ",
+      error:error.message
+      
     });
   }
 };

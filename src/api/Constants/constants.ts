@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const PORT = process.env.PORT || 4000;
-<<<<<<< Updated upstream
-=======
 
 export const message = {
   user: {
@@ -64,4 +62,3 @@ export const message = {
     },
   },
 };
->>>>>>> Stashed changes

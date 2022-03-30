@@ -3,6 +3,8 @@ import dbInit from "./database/init";
 import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
+import { User } from "./api/Models/user";
+import { userInfo } from "os";
 
 import { User } from "./api/Models/user";
 import { userInfo } from "os";
@@ -16,6 +18,7 @@ export class Application {
     this.config();
     dbInit();
     // this.app.use(tokenGuard())
+
     this.run();
   }
 
@@ -29,12 +32,17 @@ export class Application {
 
   run() {
     try {
+      
+        
+         
+       
       this.app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}/apiDelivrini`);
       });
     } catch (error: any) {
       console.log(`Error occurred: ${error.message}`);
     }
+
     this.app.use("/apiDelivrini", defaultRouter);
   }
 }

@@ -3,7 +3,7 @@
 
 import { NextFunction, Request, Response } from "express";
 import { message } from "../Constants/constants";
-import { User } from "../Models/Entities/user";
+import { User } from "../Models/user";
 
 const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
   const userId = (<any>req).userId;
@@ -14,11 +14,15 @@ const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json({
           access_granted: "you are ".concat(user?.getDataValue("fk_role")),
         });
-        next();
+      } else {
+        res.status(403).send({
+          error: "you're not Client , this Require Client Role!",
+        });
       }
+      next();
     })
     .catch((error) => {
-      res.status(403).send({
+      res.status(404).send({
         error: error.mesage,
         message: message.role.client.access_not_granted,
       });
@@ -27,8 +31,7 @@ const checkIsClient = (req: Request, res: Response, next: NextFunction) => {
 
 const checkIsAdmin = (req: Request, res: Response, next: NextFunction) => {
   const userId = (<any>req).userId;
-  console.log(userId);
-
+ 
   User.findByPk(userId)
     .then((user) => {
       if (user?.getDataValue("fk_role") === "admin") {
@@ -39,9 +42,10 @@ const checkIsAdmin = (req: Request, res: Response, next: NextFunction) => {
           error: message.role.admin.access_not_granted,
         });
       }
+      next();
     })
     .catch((error) => {
-      res.status(403).send({
+      res.status(404).send({
         error: error.mesage,
          
       });
@@ -57,16 +61,15 @@ const checkIsChef = (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json({
           access_granted: "you are ".concat(user?.getDataValue("fk_role")),
         });
-        return next();
       } else {
         res.status(403).send({
           error: message.role.chef.access_not_granted,
         });
-        return next();
       }
+      return next();
     })
     .catch((error) => {
-      res.status(403).send({
+      res.status(404).send({
         error: error.mesage,
         
       });
@@ -82,16 +85,15 @@ const checkIsDeliveryMan = (req: Request, res: Response, next: NextFunction) => 
         res.status(200).json({
           access_granted: "you are ".concat(user?.getDataValue("fk_role")),
         });
-        return next();
       } else {
         res.status(403).send({
-          error: message.role.chef.access_not_granted,
+          error: message.role.deliveryMan.access_not_granted,
         });
-        return next();
       }
+      return next();
     })
     .catch((error) => {
-      res.status(403).send({
+      res.status(404).send({
         error: error.mesage,
       });
     });

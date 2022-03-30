@@ -1,5 +1,5 @@
 import Sequelize, { Model } from "sequelize";
-import my_Database from "../../../database/database";
+import my_Database from "../../database/database";
 import { Role } from "./role";
 import { Token } from "./token";
 
@@ -10,7 +10,11 @@ export class User extends Model {
   password!: string;
   email!: string;
   phone!: string;
-  role!: string;
+  role?: string;
+  address!: string;
+  zipCode!: string;
+  street!: string;
+  statusDM!: string;
 }
 
 User.init(
@@ -59,4 +63,4 @@ User.belongsTo(Role, {
   targetKey: "roleName",
 });
 
-User.hasOne(Token,{foreignKey : "userId"});
+User.hasOne(Token, { foreignKey: "userId" });
