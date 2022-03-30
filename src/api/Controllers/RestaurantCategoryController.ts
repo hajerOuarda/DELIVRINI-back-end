@@ -77,14 +77,21 @@ restaurantCategoryControllerRouter.delete(
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
     deleteRestaurantCategory(categoryId)
-      .then(() => {
+       .then((nbr) => {
+      if (nbr)
         res
           .status(200)
-          .json({ message: message.restaurantCategory.success.deleted, id: categoryId });
-      })
-      .catch((err: Error) =>
-        res.status(404).json({ errors: message.restaurantCategory.error.not_deleted })
-      );
+          .json({
+            message: message.restaurantCategory.success.deleted,
+            id: categoryId,
+          });
+      else
+        res.status(404).json({
+          message: message.restaurantCategory.error.not_deleted,
+        });
+    })
+    .catch((err: Error) => res.json({ error: err.message }));
+ 
   }
 );
 
