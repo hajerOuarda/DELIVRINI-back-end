@@ -3,12 +3,7 @@ import dbInit from "./database/init";
 import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
-import { User } from "./api/Models/user";
-import { userInfo } from "os";
-
-import { User } from "./api/Models/user";
-import { userInfo } from "os";
-import { Role } from "./api/Models/role";
+ 
 
 
 export class Application {
