@@ -8,26 +8,27 @@ import {
 
 const authControllerRouter = Router();
 
-authControllerRouter.get("/signup", (req: Request, resp: Response, next) => {
-  signup(req, resp, next);
-});
-authControllerRouter.get("/login", (req: Request, resp: Response, next) => {
-  login(req, resp, next);
-});
+authControllerRouter.get(
+  "/signup",
+  (req: Request, resp: Response, next: NextFunction) => {
+    signup(req, resp, next);
+  }
+);
+authControllerRouter.get(
+  "/login",
+  (req: Request, resp: Response, next: NextFunction) => {
+    login(req, resp, next);
+  }
+);
 authControllerRouter.get(
   "/requestPasswordReset",
-  (req: Request, res: Response, next: NextFunction) => {
-    requestPasswordReset(req,res,next)
-      
+  (req: Request, res: Response) => {
+    requestPasswordReset(req, res);
   }
 );
 
-authControllerRouter.get(
-  "/resetPassword",
-  (req: Request, res: Response, next: NextFunction) => {
-    resetPassword(req,res,next)
-     
-  }
-);
+authControllerRouter.get("/resetPassword", (req: Request, res: Response) => {
+  resetPassword(req, res);
+});
 
 export default authControllerRouter;
