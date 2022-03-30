@@ -2,7 +2,12 @@ import { Router, Request, Response, NextFunction } from "express";
 import { isAuthenticated } from "../middlewares/auth";
 import { checkIsAdmin } from "../middlewares/rolesJwt";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { login, requestPasswordReset, sendEmail, signup } from "../Models/Services/UserService";
+=======
+import RestaurantCategoryRouter from "./RestaurantCategoryRouter";
+import restaurantRouter from "./RestaurantRouter";
+>>>>>>> Stashed changes
 =======
 import RestaurantCategoryRouter from "./RestaurantCategoryRouter";
 import restaurantRouter from "./RestaurantRouter";
@@ -22,6 +27,9 @@ const configRouters = (): Router => {
   router.use("/restaurants", [isAuthenticated, checkIsAdmin], restaurantRouter);
   router.use("/restaurantCategory", RestaurantCategoryRouter);
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   return router;
 };
