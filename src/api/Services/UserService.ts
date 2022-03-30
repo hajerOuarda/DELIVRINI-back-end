@@ -26,60 +26,64 @@ const verifyOptions: VerifyOptions = {
 
 const signup = (req: Request, res: Response, next: NextFunction) => {
   const { name, lastname, phone, email, password, role_name }: any = req.body;
-  User.count({ where: { email: email } }).then((_emailExisted) => {
-    if (_emailExisted != 0) {
-      res.status(500).json({
-        message: "User already existed",
-      });
-      next({ message: "User already existed" });
-      return;
-    }
+  if (!email || !password) {
+    res.status(404).json({ message: "enter email and password " });
+    return;
+  }
 
-    bcrypt
-      .hash(password, 10)
-      .then((hash) => {
-        const user = new User({
-          email: email,
-          password: hash,
-          name: name,
-          lastname: lastname,
-          phone: phone,
-          fk_role: role_name,
+  User.count({ where: { email: email } })
+    .then(async (_emailExisted) => {
+      if (_emailExisted != 0) {
+        res.status(500).json({
+          message: "User already existed",
         });
-        user
-          .save()
-          .then(() => {
-            res.status(201).json({
-              message: "User Registered successfully!",
-            });
-            next();
-          })
-          .catch((error) => {
- 
-            res.status(500).json({
-              error: error.message,
-            });
-          });
-      })
-      .catch((err: Error) => {
-        res.status(401).json(err.message);
+        return;
+      }
+      const hash = await bcrypt.hash(password, 10);
+
+      const user = new User({
+        email: email,
+        password: hash,
+        name: name,
+        lastname: lastname,
+        phone: phone,
+        fk_role: role_name,
       });
-  });
+      user
+        .save()
+        .then(() => {
+          res.status(201).json({
+            message: "User Registered successfully!",
+          });
+          next();
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error: error.message,
+          });
+        });
+    })
+    .catch((err: Error) => {
+      res.status(404).json({ error: err.message });
+    });
 };
 /** login user   */
 
 const login = (req: Request, res: Response, next: NextFunction) => {
   const { email, password }: any = req.body;
+  if (!email || !password) {
+    res.status(404).json({ message: "enter email and password " });
+    return;
+  }
   User.findOne({ where: { email: email } })
     .then((user) => {
       if (!user) {
-        res.status(401).json({
+        res.status(404).json({
           error: "User not found!",
         });
-        next("User not found!");
+        next();
         return;
       }
-
       bcrypt
         .compare(password, user.password)
         .then((valid) => {
@@ -100,9 +104,8 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         })
         .catch((error) => {
           res.status(500).json({
-            error: {
-              mesage: "error in password",
-            },
+            error: error.mesage,
+            mesage: "error in password",
           });
         });
     })
@@ -148,17 +151,12 @@ const sendEmail = async (
     const url = nodemailer.getTestMessageUrl(info) as string;
 
     return url;
-  } catch (error) {
-   }
+  } catch (error) {}
 };
 
-const requestPasswordReset = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const requestPasswordReset = (req: Request, res: Response) => {
   const email = req.body.email;
- 
+
   User.findOne({ where: { email: email } })
     .then((user) => {
       Token.findOne({ where: { userId: user!.id } })
@@ -208,22 +206,21 @@ const requestPasswordReset = (
     });
 };
 
-const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const resetPassword = async (req: Request, res: Response) => {
   const userId = req.query.id as any;
-  const token = req.query.token as any,
-    password = req.body.password!;
- 
+  const token = req.query.token as any;
+  const password = req.body.password!;
+  if (!password) {
+    res.status(404).json({ message: "enter new password  " });
+    return;
+  }
   Token.findOne({ where: { userId: userId } })
     .then((passwordResetToken) => {
       bcrypt
         .compare(token, passwordResetToken!.token)
         .then(async () => {
           const hash = await bcrypt.hash(password, 10);
-          // if(!password)
+          
           User.update({ password: hash }, { where: { id: userId } })
             .then()
             .catch();
@@ -236,7 +233,7 @@ const resetPassword = async (
           );
           passwordResetToken!.destroy();
           return res.status(200).json({
-            message: "Password Reset Seccessfully check your mail",
+            message: "Password Reset Successfully check your mail",
             url: url,
           });
         })
@@ -267,15 +264,15 @@ function findOneUser(userId: string): Promise<User | null> {
   return User.findByPk<User>(userId);
 }
 
-  function createUser(user: any) {
+function createUser(user: any) {
   const params = user;
- return  User.create<User>(params);
+  return User.create<User>(params);
 }
 
-  function updateUser(user: User, id: string) {
+function updateUser(user: User, id: string) {
   const userId = id;
   const params = user;
- 
+
   const options: UpdateOptions = {
     where: { id: userId },
     limit: 1,
@@ -291,7 +288,7 @@ async function deleteUser(userId: string) {
   };
 
   return User.destroy(options);
-} 
+}
 
 export {
   findAllUsers,
@@ -305,7 +302,4 @@ export {
   sendEmail,
   requestPasswordReset,
   resetPassword,
-  
 };
-
- 
