@@ -3,6 +3,12 @@ import dbInit from "./database/init";
 import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
+<<<<<<< Updated upstream
+=======
+import { User } from "./api/Models/user";
+import { userInfo } from "os";
+import { Role } from "./api/Models/role";
+>>>>>>> Stashed changes
 
 export class Application {
   public app: Express;
