@@ -14,7 +14,7 @@ export class User extends Model {
   address!: string;
   zipCode!: string;
   street!: string;
-  statusDM!:string
+  statusDM!: string;
 }
 
 User.init(
@@ -63,5 +63,4 @@ User.belongsTo(Role, {
   targetKey: "roleName",
 });
 
-User.hasOne(Token,{foreignKey : "userId"});
- 
+User.hasOne(Token, { foreignKey: "userId" });
