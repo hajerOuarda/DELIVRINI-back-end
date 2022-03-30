@@ -7,9 +7,9 @@ function findAllRestaurantCategory(): Promise<RestaurantCategory[]> {
 }
 
 function findOneRestaurantCategory(
-  userId: string
+  restoCategoryId: string
 ): Promise<RestaurantCategory | null> {
-  return RestaurantCategory.findByPk<RestaurantCategory>(userId);
+  return RestaurantCategory.findByPk<RestaurantCategory>(restoCategoryId);
 }
 
 async function createRestaurantCategory(restaurant: any) {
@@ -32,9 +32,9 @@ async function updateRestaurantCategory(
   return RestaurantCategory.update(params, options);
 }
 
-async function deleteRestaurantCategory(userId: string) {
+async function deleteRestaurantCategory(restoCategoryId: string) {
   const options: DestroyOptions = {
-    where: { id: userId },
+    where: { id: restoCategoryId },
     limit: 1,
   };
 

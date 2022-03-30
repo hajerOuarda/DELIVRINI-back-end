@@ -8,8 +8,8 @@ function findAllRestaurants(): Promise<Restaurant[]> {
   return Restaurant.findAll<Restaurant>();
 }
 
-function findOneRestaurant(userId: string): Promise<Restaurant | null> {
-  return Restaurant.findByPk<Restaurant>(userId);
+function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
+  return Restaurant.findByPk<Restaurant>(restoId);
 }
 
   function createRestaurant(restaurant: any) {
@@ -29,9 +29,9 @@ function findOneRestaurant(userId: string): Promise<Restaurant | null> {
   return Restaurant.update(params, options);
 }
 
-  function deleteRestaurant(userId: string) {
+  function deleteRestaurant(restoId: string) {
   const options: DestroyOptions = {
-    where: { id: userId },
+    where: { id: restoId },
     limit: 1,
   };
 

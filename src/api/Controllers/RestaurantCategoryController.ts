@@ -15,8 +15,8 @@ restaurantCategoryControllerRouter.get(
   "/all",
   (req: Request, res: Response) => {
     findAllRestaurantCategory()
-      .then((restaurants: Array<RestaurantCategory>) => {
-        res.send(restaurants);
+      .then((restaurantCategory: Array<RestaurantCategory>) => {
+        res.send(restaurantCategory);
       })
       .catch((err: Error) => {
         res.json(err.message);
@@ -80,10 +80,10 @@ restaurantCategoryControllerRouter.delete(
       .then(() => {
         res
           .status(200)
-          .json({ message: message.restaurant.success.deleted, id: categoryId });
+          .json({ message: message.restaurantCategory.success.deleted, id: categoryId });
       })
       .catch((err: Error) =>
-        res.status(404).json({ errors: message.restaurant.error.not_deleted })
+        res.status(404).json({ errors: message.restaurantCategory.error.not_deleted })
       );
   }
 );
