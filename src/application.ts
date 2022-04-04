@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
 
-
 export class Application {
   public app: Express;
   constructor() {
@@ -26,10 +25,6 @@ export class Application {
 
   run() {
     try {
-      
-        
-         
-       
       this.app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}/apiDelivrini`);
       });

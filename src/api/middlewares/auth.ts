@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { PUBLIC_KEY } from "../config/jwt/auth.config";
-import { User } from "../Models/user";
+import { User } from "../Models/User";
 import { verifyOptions } from "../Services/UserService";
 
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
@@ -21,16 +21,17 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
       })
       .catch((error) => {
         res.status(401).json({
-          error: { type: "unauthorized", message: "Authentication Failed" },
+          error: { error: error ,type: "unauthorized", message: "Authentication Failed" },
         });
       });
   } catch (error:any) {
-    return res.status(500).json({
+      res.status(500).json({
       message: "Invalid Token! ",
       error:error.message
       
     });
   }
+   
 };
 
 export { isAuthenticated };

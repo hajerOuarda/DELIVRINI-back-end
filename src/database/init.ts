@@ -1,4 +1,4 @@
- import my_Database from "./database";
+import my_Database from "./database";
 
 const isDev = process.env.NODE_ENV === "development";
 

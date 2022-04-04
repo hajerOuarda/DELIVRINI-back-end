@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
-import { User } from "../Models/user";
+import { paginate } from "../middlewares/validators";
+import { User } from "../Models/User";
 
 import {
   createUser,
@@ -10,29 +11,34 @@ import {
   updateUser,
 } from "../Services/UserService";
 
-const userControllerRouter = Router();
+const userController = Router();
 
-userControllerRouter.get("/all", (req: Request, res: Response) => {
-  findAllUsers()
+userController.get("/all", (req: Request, res: Response) => {
+  const size: any = req.query.size; // number of records per page, pageSize
+  const page: any = req.query.page; // page number
+  const options = paginate(page, size);
+   
+  findAllUsers(options)
     .then((users: Array<User>) => {
-      res.send(users);
+      res.send({usersList :users});
     })
     .catch((err: Error) => {
       res.status(500).json(err.message);
     });
 });
-userControllerRouter.get("/:id", (req: Request, res: Response) => {
+userController.get("/:id", (req: Request, res: Response) => {
   findOneUser(req.params.id)
     .then((user: User | null) => {
       if (user) {
-        return res.status(200).json({ user_found: user });
-      } else
-        return res.status(404).json({ errors: message.user.error.not_found });
+        res.status(200).json({ user_found: user });
+      } else res.status(404).json({ errors: message.user.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => {
+      res.status(500).json(err.message);
+    });
 });
 
-userControllerRouter.post("/", (req: Request, res: Response) => {
+userController.post("/", (req: Request, res: Response) => {
   createUser(req.body)
     .then((user: any) => {
       res.send({
@@ -44,7 +50,7 @@ userControllerRouter.post("/", (req: Request, res: Response) => {
       res.status(500).json(err.message);
     });
 });
-userControllerRouter.patch("/:id", (req: Request, res: Response) => {
+userController.patch("/:id", (req: Request, res: Response) => {
   updateUser(req.body, req.params.id)
     .then((nbrRaw) => {
       if (nbrRaw[0])
@@ -60,7 +66,7 @@ userControllerRouter.patch("/:id", (req: Request, res: Response) => {
       res.json(err.message);
     });
 });
-userControllerRouter.delete("/:id", (req: Request, res: Response) => {
+userController.delete("/:id", (req: Request, res: Response) => {
   const id = req.params.id;
   deleteUser(id)
     .then((nbrRaw) => {
@@ -76,4 +82,4 @@ userControllerRouter.delete("/:id", (req: Request, res: Response) => {
     });
 });
 
-export default userControllerRouter;
+export default userController;
