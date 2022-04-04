@@ -1,6 +1,7 @@
 import { Router, Response, Request } from "express";
 import { message } from "../Constants/constants";
-import { RestaurantCategory } from "../Models/restaurantCategory";
+import { paginate } from "../middlewares/validators";
+import { RestaurantCategory } from "../Models/Association";
 import {
   createRestaurantCategory,
   deleteRestaurantCategory,
@@ -9,21 +10,24 @@ import {
   updateRestaurantCategory,
 } from "../Services/RestaurantCategoryService";
 
-const restaurantCategoryControllerRouter = Router();
+const restaurantCategoryController = Router();
 
-restaurantCategoryControllerRouter.get(
+restaurantCategoryController.get(
   "/all",
   (req: Request, res: Response) => {
-    findAllRestaurantCategory()
+    const size: any = req.query.size; // number of records per page, pageSize
+    const page: any = req.query.page; // page number
+    const options = paginate(page, size);
+    findAllRestaurantCategory(options)
       .then((restaurantCategory: Array<RestaurantCategory>) => {
-        res.send(restaurantCategory);
+        res.send({ restaurantCategories_list:  restaurantCategory });
       })
       .catch((err: Error) => {
         res.json(err.message);
       });
   }
 );
-restaurantCategoryControllerRouter.get(
+restaurantCategoryController.get(
   "/:id",
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
@@ -41,7 +45,7 @@ restaurantCategoryControllerRouter.get(
   }
 );
 
-restaurantCategoryControllerRouter.post("/", (req: Request, res: Response) => {
+restaurantCategoryController.post("/", (req: Request, res: Response) => {
   createRestaurantCategory(req.body)
     .then((category: any) => {
       res.send({
@@ -53,7 +57,7 @@ restaurantCategoryControllerRouter.post("/", (req: Request, res: Response) => {
       res.status(500).json(err.message);
     });
 });
-restaurantCategoryControllerRouter.patch(
+restaurantCategoryController.patch(
   "/:id",
   (req: Request, res: Response) => {
     updateRestaurantCategory(req.body, req.params.id)
@@ -72,7 +76,7 @@ restaurantCategoryControllerRouter.patch(
       });
   }
 );
-restaurantCategoryControllerRouter.delete(
+restaurantCategoryController.delete(
   "/:id",
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
@@ -95,4 +99,4 @@ restaurantCategoryControllerRouter.delete(
   }
 );
 
-export default restaurantCategoryControllerRouter;
+export default restaurantCategoryController;

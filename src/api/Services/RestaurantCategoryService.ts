@@ -1,35 +1,38 @@
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
-import { RestaurantCategory } from "../Models/restaurantCategory";
+import { RestaurantCategory } from "../Models/Association";
 
-function findAllRestaurantCategory(): Promise<RestaurantCategory[]> {
-  return RestaurantCategory.findAll<RestaurantCategory>();
+async function findAllRestaurantCategory(options:any): Promise<RestaurantCategory[]> {
+  return await RestaurantCategory.findAll<RestaurantCategory>({
+    limit: parseInt(options.limit),
+    offset: options.offset,
+  });
 }
 
-function findOneRestaurantCategory(
+async function findOneRestaurantCategory(
   restoCategoryId: string
 ): Promise<RestaurantCategory | null> {
-  return RestaurantCategory.findByPk<RestaurantCategory>(restoCategoryId);
+  return await RestaurantCategory.findByPk<RestaurantCategory>(restoCategoryId);
 }
 
-async function createRestaurantCategory(restaurant: any) {
-  const params = restaurant;
-  return RestaurantCategory.create<RestaurantCategory>(params);
+async function createRestaurantCategory(restaurantCategory: any) {
+  const params = restaurantCategory;
+  return await RestaurantCategory.create<RestaurantCategory>(params);
 }
 
 async function updateRestaurantCategory(
-  restaurant: RestaurantCategory,
+  restaurantCategory: RestaurantCategory,
   id?: string
 ) {
   const restoId = id;
-  const params = restaurant;
+  const params = restaurantCategory;
 
   const options: UpdateOptions = {
     where: { id: restoId },
     limit: 1,
   };
 
-  return RestaurantCategory.update(params, options);
+  return await  RestaurantCategory.update(params, options);
 }
 
 async function deleteRestaurantCategory(restoCategoryId: string) {
@@ -38,7 +41,7 @@ async function deleteRestaurantCategory(restoCategoryId: string) {
     limit: 1,
   };
 
-  return RestaurantCategory.destroy(options);
+  return await RestaurantCategory.destroy(options);
 }
 
 export {
