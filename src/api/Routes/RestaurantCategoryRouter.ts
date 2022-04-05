@@ -1,9 +1,9 @@
 import { Router } from "express";
-import restaurantCategoryControllerRouter from "../Controllers/RestaurantCategoryController";
+import restaurantCategoryController from "../Controllers/RestaurantCategoryController";
 
 const restaurantCategoryRouter = (): Router => {
   const router: Router = Router();
-  router.use("/", restaurantCategoryControllerRouter);
+  router.use("/", restaurantCategoryController);
   return router;
 };
 

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
+import { requireBodyFields } from "../middlewares/validators";
 import {
   login,
   requestPasswordReset,
@@ -6,28 +7,36 @@ import {
   signup,
 } from "../Services/UserService";
 
-const authControllerRouter = Router();
+const authController = Router();
 
-authControllerRouter.get("/signup", (req: Request, resp: Response, next) => {
-  signup(req, resp, next);
-});
-authControllerRouter.get("/login", (req: Request, resp: Response, next) => {
-  login(req, resp, next);
-});
-authControllerRouter.get(
+authController.get(
+  "/signup",
+  [requireBodyFields(["email", "password"])],
+  (req: Request, resp: Response) => {
+    signup(req, resp);
+  }
+);
+authController.get(
+  "/login",
+  [requireBodyFields(["email", "password"])],
+  (req: Request, resp: Response) => {
+    login(req, resp);
+  }
+);
+authController.get(
   "/requestPasswordReset",
-  (req: Request, res: Response, next: NextFunction) => {
-    requestPasswordReset(req,res,next)
-      
+  [requireBodyFields(["email"])],
+  (req: Request, res: Response) => {
+    requestPasswordReset(req, res);
   }
 );
 
-authControllerRouter.get(
+authController.get(
   "/resetPassword",
-  (req: Request, res: Response, next: NextFunction) => {
-    resetPassword(req,res,next)
-     
+  [requireBodyFields(["password"])],
+  (req: Request, res: Response) => {
+    resetPassword(req, res);
   }
 );
 
-export default authControllerRouter;
+export default authController;

@@ -58,7 +58,50 @@ export const message = {
       access_not_granted: "you're not a Chef , this Requires Chef Role!",
     },
     deliveryMan: {
-      access_not_granted: "you're not a Delivery Man , this Require Delivery Man Role!",
+      access_not_granted:
+        "you're not a Delivery Man , this Require Delivery Man Role!",
+    },
+  },
+  mealCategory: {
+    success: {
+      found: "mealCategory found ",
+      updated: "** mealCategory succesfully updated ** ",
+      created: "** mealCategory succesfully created **",
+      deleted: "** mealCategory succesfully deleted , with id :",
+    },
+    error: {
+      not_found: "mealCategory not found :( ",
+      not_updated: "** no mealCategory found to  update **",
+      not_created: " mealCategory is not created",
+      not_deleted: "mealCategory doesn't exist to be deleted",
+    },
+  },
+  meal: {
+    success: {
+      found: "meal found ",
+      updated: "** meal succesfully updated ** ",
+      created: "** meal succesfully created **",
+      deleted: "** meal succesfully deleted , with id :",
+    },
+    error: {
+      not_found: "meal not found :( ",
+      not_updated: "** no meal found to  update **",
+      not_created: " meal is not created",
+      not_deleted: "meal doesn't exist to be deleted",
+    },
+  },
+  element: {
+    success: {
+      found: "element found ",
+      updated: "** element succesfully updated ** ",
+      created: "** element succesfully created **",
+      deleted: "** element succesfully deleted , with id :",
+    },
+    error: {
+      not_found: "element not found :( ",
+      not_updated: "** no element found to  update **",
+      not_created: " element is not created",
+      not_deleted: "element doesn't exist to be deleted",
     },
   },
 };

@@ -2,25 +2,28 @@
 
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
-import { Restaurant } from "../Models/restaurant";
+import { Restaurant } from "../Models/Association";
 
-function findAllRestaurants(): Promise<Restaurant[]> {
-  return Restaurant.findAll<Restaurant>();
+function findAllRestaurants(options:any): Promise<Restaurant[]> {
+  return Restaurant.findAll<Restaurant>({
+    limit: parseInt(options.limit),
+    offset: options.offset,
+  });
 }
 
 function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
   return Restaurant.findByPk<Restaurant>(restoId);
 }
 
-  function createRestaurant(restaurant: any) {
+function createRestaurant(restaurant: any) {
   const params = restaurant;
   return Restaurant.create<Restaurant>(params);
 }
 
-  function updateRestaurant(restaurant: Restaurant, id?: string) {
+function updateRestaurant(restaurant: Restaurant, id?: string) {
   const restoId = id;
   const params = restaurant;
-   
+
   const options: UpdateOptions = {
     where: { id: restoId },
     limit: 1,
@@ -29,7 +32,7 @@ function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
   return Restaurant.update(params, options);
 }
 
-  function deleteRestaurant(restoId: string) {
+function deleteRestaurant(restoId: string) {
   const options: DestroyOptions = {
     where: { id: restoId },
     limit: 1,
@@ -38,4 +41,10 @@ function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
   return Restaurant.destroy(options);
 }
 
-export {findAllRestaurants,findOneRestaurant,createRestaurant,updateRestaurant,deleteRestaurant}
+export {
+  findAllRestaurants,
+  findOneRestaurant,
+  createRestaurant,
+  updateRestaurant,
+  deleteRestaurant,
+};
