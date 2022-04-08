@@ -1,15 +1,18 @@
 import { Router } from "express";
-import authControllerRouter from "../Controllers/AuthController";
-import userControllerRouter from "../Controllers/UserController";
+import authController from "../Controllers/AuthController";
+import userController from "../Controllers/UserController";
  import { isAuthenticated } from "../middlewares/auth";
 import { checkIsAdmin } from "../middlewares/rolesJwt";
+import { requireBodyFields } from "../middlewares/validators";
 
 const config = (): Router => {
   const router: Router = Router();
 //  
-  router.use("/admin",[isAuthenticated,checkIsAdmin], userControllerRouter) 
+  router.use("/admin",
+  [isAuthenticated,checkIsAdmin],
+   userController) 
   
-  router.use('/auth',authControllerRouter)
+  router.use('/auth',authController)
   return router;
 };
 

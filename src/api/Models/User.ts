@@ -1,7 +1,7 @@
 import Sequelize, { Model } from "sequelize";
 import my_Database from "../../database/database";
-import { Role } from "./role";
-import { Token } from "./token";
+import { Role } from "./Role";
+import { Token } from "./Token";
 
 export class User extends Model {
   id!: number;

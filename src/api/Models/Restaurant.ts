@@ -1,9 +1,9 @@
 import Sequelize, {  Model } from "sequelize";
 import my_Database from "../../database/database";
-import { RestaurantCategory } from "./restaurantCategory";
+import { RestaurantCategory } from "./RestaurantCategory";
 
 export class Restaurant extends Model {
-  id!: number;
+   
   name!: string;
   email!:string
   address!: string;
@@ -15,6 +15,8 @@ Restaurant.init(
   {
     name: {
       type: Sequelize.STRING,
+      allowNull: false,
+      unique: "name",
     },
     email: {
       type: Sequelize.STRING,

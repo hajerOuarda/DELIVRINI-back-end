@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
-import { Restaurant } from "../Models/restaurant";
+import { paginate } from "../middlewares/validators";
+import { Restaurant } from "../Models/Association";
 import {
   createRestaurant,
   deleteRestaurant,
@@ -9,18 +10,21 @@ import {
   updateRestaurant,
 } from "../Services/RestaurantService";
 
-const restaurantControllerRouter = Router();
+const restaurantController = Router();
 
-restaurantControllerRouter.get("/all", (req: Request, res: Response) => {
-  findAllRestaurants()
+restaurantController.get("/all", (req: Request, res: Response) => {
+    const size: any = req.query.size; // number of records per page, pageSize
+    const page: any = req.query.page; // page number
+    const options = paginate(page, size);
+  findAllRestaurants(options)
     .then((restaurants: Array<Restaurant>) => {
-      res.send(restaurants);
+      res.send({ restaurants_list: restaurants });
     })
     .catch((err: Error) => {
       res.status(500).json(err.message);
     });
 });
-restaurantControllerRouter.get("/:id", (req: Request, res: Response) => {
+restaurantController.get("/:id", (req: Request, res: Response) => {
   const restoId = req.params.id;
 
   findOneRestaurant(restoId)
@@ -35,7 +39,7 @@ restaurantControllerRouter.get("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.status(500).json(err.message));
 });
 
-restaurantControllerRouter.post("/", (req: Request, res: Response) => {
+restaurantController.post("/", (req: Request, res: Response) => {
   createRestaurant(req.body)
     .then((resto) => {
       res.send({
@@ -50,7 +54,7 @@ restaurantControllerRouter.post("/", (req: Request, res: Response) => {
       });
     });
 });
-restaurantControllerRouter.patch("/:id", (req: Request, res: Response) => {
+restaurantController.patch("/:id", (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
@@ -66,7 +70,7 @@ restaurantControllerRouter.patch("/:id", (req: Request, res: Response) => {
       res.status(500).json(err.message);
     });
 });
-restaurantControllerRouter.delete("/:id", (req: Request, res: Response) => {
+restaurantController.delete("/:id", (req: Request, res: Response) => {
   const restoId = req.params.id;
   deleteRestaurant(restoId)
     .then((nbr) => {
@@ -82,4 +86,4 @@ restaurantControllerRouter.delete("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.json({ error: err.message }));
 });
 
-export default restaurantControllerRouter;
+export default restaurantController;
