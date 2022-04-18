@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { isAuthenticated } from "../middlewares/auth";
-import { checkIsAdmin } from "../middlewares/rolesJwt";
+import { checkIsAdmin, checkIsChef } from "../middlewares/rolesJwt";
 import elementRouter from "./ElementRouter";
 import mealCategoryRouter from "./MealCategoryRouter";
 import mealRouter from "./MealRouter";
@@ -12,6 +12,9 @@ import userRouter from "./UserRouter";
 const configRouters = (): Router => {
   const router: Router = Router();
   // midellware
+ router.get("/hello",  (req:Request,res :Response)=>{
+          res.send({message:"test done"})
+  })
 
   router.use("/user", userRouter);
   router.use("/restaurants", [isAuthenticated, checkIsAdmin], restaurantRouter);
@@ -25,8 +28,9 @@ const configRouters = (): Router => {
     [isAuthenticated, checkIsAdmin],
     mealCategoryRouter
   );
-  router.use("/meal", [isAuthenticated, checkIsAdmin], mealRouter);
-  router.use("/element", [isAuthenticated, checkIsAdmin],elementRouter );
+  router.use("/meal", [isAuthenticated, checkIsChef], mealRouter);
+  router.use("/element", [isAuthenticated, checkIsChef],elementRouter );
+ 
 
   return router;
 };
