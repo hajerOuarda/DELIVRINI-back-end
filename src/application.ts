@@ -3,6 +3,7 @@ import dbInit from "./database/init";
 import bodyParser from "body-parser";
 import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
+import cors from "cors";
 
 export class Application {
   public app: Express;
@@ -10,7 +11,7 @@ export class Application {
     this.app = express();
     this.config();
     dbInit();
-    // this.app.use(tokenGuard())
+    this.app.use(cors());
 
     this.run();
   }
