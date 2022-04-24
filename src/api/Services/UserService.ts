@@ -85,7 +85,7 @@ const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user?.id }, PRIVATE_KEY, signOptions);
         res.status(200).json({
           message: "** login succesful !",
-          userId: user!.id,
+          user: user,
           accessToken: token,
         });
       }
