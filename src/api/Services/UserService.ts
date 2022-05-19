@@ -25,15 +25,16 @@ const verifyOptions: VerifyOptions = {
 /** Register user   */
 
 const signup = async (req: Request, res: Response) => {
-  const { name, lastname, phone, email, password, role_name }: any = req.body;
+  const { name, lastname, phone, email, password, address, zipCode, street, role }: any = req.body;
   if (!email || !password) {
     res.status(404).json({ message: "enter email and password " });
   } else {
     const _emailExisted = await User.count({ where: { email: email } });
 
     if (_emailExisted != 0) {
-      res.status(500).json({
+      res.status(409).json({
         message: "User already existed",
+        code: 409
       });
     } else {
       try {
@@ -44,7 +45,10 @@ const signup = async (req: Request, res: Response) => {
           name: name,
           lastname: lastname,
           phone: phone,
-          fk_role: role_name,
+          address: address,
+          zipCode: zipCode,
+          street: street,
+          fk_role: role,
         });
         try {
           await user.save();
@@ -90,7 +94,7 @@ const login = async (req: Request, res: Response) => {
         });
       }
     } catch (error: any) {
-      res.status(500).json({
+      res.status(401).json({
         error: error.mesage,
         mesage: "error in password",
       });
@@ -142,7 +146,7 @@ const requestPasswordReset = async (req: Request, res: Response) => {
   const email = req.body.email;
   const user = await User.findOne({ where: { email: email } });
   if (!user) {
-    res.status(500).json({
+    res.status(404).json({
       error: { message: "No user with that email : " },
     });
   } else {
@@ -156,9 +160,8 @@ const requestPasswordReset = async (req: Request, res: Response) => {
       userId: user!.id,
       token: hash,
     });
-    const link = `http://localhost:9002/apiDelivrini/user/auth/resetPassword?token=${resetToken}&id=${
-      user!.id
-    }`;
+    const link = `http://localhost:9002/apiDelivrini/user/auth/resetPassword?token=${resetToken}&id=${user!.id
+      }`;
     const emailContent = {
       name: user?.name,
       mylink: link,
@@ -198,7 +201,6 @@ const resetPassword = async (req: Request, res: Response) => {
       });
     } else {
       const hash = await bcrypt.hash(password, 10);
-
       await User.update({ password: hash }, { where: { id: userId } });
 
       const user = await User.findByPk(userId);

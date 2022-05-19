@@ -17,10 +17,10 @@ userController.get("/all", (req: Request, res: Response) => {
   const size: any = req.query.size; // number of records per page, pageSize
   const page: any = req.query.page; // page number
   const options = paginate(page, size);
-   
+
   findAllUsers(options)
     .then((users: Array<User>) => {
-      res.send({usersList :users});
+      res.send({ usersList: users });
     })
     .catch((err: Error) => {
       res.status(500).json(err.message);
@@ -43,7 +43,7 @@ userController.post("/", (req: Request, res: Response) => {
     .then((user: any) => {
       res.send({
         message: message.user.success.created,
-        user,
+        user: user,
       });
     })
     .catch((err: Error) => {

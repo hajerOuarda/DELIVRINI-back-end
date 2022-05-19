@@ -12,8 +12,8 @@ import userRouter from "./UserRouter";
 const configRouters = (): Router => {
   const router: Router = Router();
   // midellware
- router.get("/hello",  (req:Request,res :Response)=>{
-          res.send({message:"test done"})
+  router.get("/hello", (req: Request, res: Response) => {
+    res.send({ message: "test done" })
   })
 
   router.use("/user", userRouter);
@@ -29,8 +29,8 @@ const configRouters = (): Router => {
     mealCategoryRouter
   );
   router.use("/meal", [isAuthenticated, checkIsChef], mealRouter);
-  router.use("/element", [isAuthenticated, checkIsChef],elementRouter );
- 
+  router.use("/element", [isAuthenticated, checkIsChef], elementRouter);
+
 
   return router;
 };
