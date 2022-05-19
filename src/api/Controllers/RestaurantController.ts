@@ -13,12 +13,12 @@ import {
 const restaurantController = Router();
 
 restaurantController.get("/all", (req: Request, res: Response) => {
-    const size: any = req.query.size; // number of records per page, pageSize
-    const page: any = req.query.page; // page number
-    const options = paginate(page, size);
+  const size: any = req.query.size; // number of records per page, pageSize
+  const page: any = req.query.page; // page number
+  const options = paginate(page, size);
   findAllRestaurants(options)
     .then((restaurants: Array<Restaurant>) => {
-      res.send({ restaurants_list: restaurants });
+      res.send(restaurants);
     })
     .catch((err: Error) => {
       res.status(500).json(err.message);
