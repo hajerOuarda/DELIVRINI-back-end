@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
-import { paginate } from "../middlewares/validators";
+import { paginate, requireBodyFields } from "../middlewares/validators";
 import { Restaurant } from "../Models/Association";
 import {
   createRestaurant,
@@ -39,7 +39,7 @@ restaurantController.get("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.status(500).json(err.message));
 });
 
-restaurantController.post("/", (req: Request, res: Response) => {
+restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   createRestaurant(req.body)
     .then((resto) => {
       res.send({
@@ -54,7 +54,7 @@ restaurantController.post("/", (req: Request, res: Response) => {
       });
     });
 });
-restaurantController.patch("/:id", (req: Request, res: Response) => {
+restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
