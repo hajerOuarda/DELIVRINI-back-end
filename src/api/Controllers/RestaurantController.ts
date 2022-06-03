@@ -18,10 +18,10 @@ restaurantController.get("/all", (req: Request, res: Response) => {
   const options = paginate(page, size);
   findAllRestaurants(options)
     .then((restaurants: Array<Restaurant>) => {
-      res.send(restaurants);
+      res.status(200).send(restaurants);
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 restaurantController.get("/:id", (req: Request, res: Response) => {
@@ -36,19 +36,19 @@ restaurantController.get("/:id", (req: Request, res: Response) => {
           .status(404)
           .json({ errors: message.restaurant.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => res.status(404).json(err.message));
 });
 
 restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   createRestaurant(req.body)
     .then((resto) => {
-      res.send({
+      res.status(200).send({
         message: message.restaurant.success.created,
         restaurant: resto,
       });
     })
     .catch((err: Error) => {
-      res.json({
+      res.status(404).json({
         message: message.restaurant.error.not_created,
         error: err.message,
       });
@@ -62,12 +62,12 @@ restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"]
           message: message.restaurant.success.updated,
         });
       else
-        res.status(401).send({
+        res.status(404).send({
           message: message.restaurant.error.not_updated,
         });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 restaurantController.delete("/:id", (req: Request, res: Response) => {
