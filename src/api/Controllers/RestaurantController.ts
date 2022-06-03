@@ -58,9 +58,13 @@ restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"]
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.restaurant.success.updated,
-        });
+        findOneRestaurant(req.params.id).then((foundRes) => {
+          res.status(200).send({
+            message: message.restaurant.success.updated,
+            updatedRestaurant: foundRes
+          });
+        }).catch()
+
       else
         res.status(404).send({
           message: message.restaurant.error.not_updated,
