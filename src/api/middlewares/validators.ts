@@ -3,14 +3,14 @@ import { NextFunction, Request, Response } from "express";
 /** Fields validator middleware */
 const checkEmptyObject = (object: any, key: string) => {
   if (!object[key] || !Object.keys(object[key]).length) {
-     throw new Error(`Empty object`);
+    throw new Error(`Empty object`);
   }
 };
 
 const requireFields = (location: any, fields: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-     
+
       checkEmptyObject(req, location);
       const missing = [];
       for (const key of fields) {
@@ -34,8 +34,8 @@ const requireQueryFields = (fields: any) => requireFields("query", fields);
 
 /** pagination function */
 const paginate = (page: any, size: any) => {
-   const limit = size;
-  const offset = limit * (parseInt(page) - 1);
+  const limit = size;
+  const offset = limit * (parseInt(page));
 
   return {
     offset: offset,
