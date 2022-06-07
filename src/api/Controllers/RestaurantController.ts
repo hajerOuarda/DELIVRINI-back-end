@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
-import { paginate } from "../middlewares/validators";
+import { paginate, requireBodyFields } from "../middlewares/validators";
 import { Restaurant } from "../Models/Association";
 import {
   createRestaurant,
@@ -13,15 +13,15 @@ import {
 const restaurantController = Router();
 
 restaurantController.get("/all", (req: Request, res: Response) => {
-    const size: any = req.query.size; // number of records per page, pageSize
-    const page: any = req.query.page; // page number
-    const options = paginate(page, size);
+  const size: any = req.query.size; // number of records per page, pageSize
+  const page: any = req.query.page; // page number
+  const options = paginate(page, size);
   findAllRestaurants(options)
     .then((restaurants: Array<Restaurant>) => {
-      res.send({ restaurants_list: restaurants });
+      res.status(200).send(restaurants);
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 restaurantController.get("/:id", (req: Request, res: Response) => {
@@ -36,38 +36,42 @@ restaurantController.get("/:id", (req: Request, res: Response) => {
           .status(404)
           .json({ errors: message.restaurant.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => res.status(404).json(err.message));
 });
 
-restaurantController.post("/", (req: Request, res: Response) => {
+restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   createRestaurant(req.body)
     .then((resto) => {
-      res.send({
+      res.status(200).send({
         message: message.restaurant.success.created,
         restaurant: resto,
       });
     })
     .catch((err: Error) => {
-      res.json({
+      res.status(404).json({
         message: message.restaurant.error.not_created,
         error: err.message,
       });
     });
 });
-restaurantController.patch("/:id", (req: Request, res: Response) => {
+restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.restaurant.success.updated,
-        });
+        findOneRestaurant(req.params.id).then((foundRes) => {
+          res.status(200).send({
+            message: message.restaurant.success.updated,
+            updatedRestaurant: foundRes
+          });
+        }).catch()
+
       else
-        res.status(401).send({
+        res.status(404).send({
           message: message.restaurant.error.not_updated,
         });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 restaurantController.delete("/:id", (req: Request, res: Response) => {
