@@ -9,6 +9,7 @@ export class Restaurant extends Model {
   zipCode!: string;
   street!: string;
   phone!: string;
+  category!: string;
 }
 
 Restaurant.init(

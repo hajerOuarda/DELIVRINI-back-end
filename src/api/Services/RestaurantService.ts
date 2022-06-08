@@ -4,7 +4,7 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Restaurant } from "../Models/Association";
 
-function findAllRestaurants(options:any): Promise<Restaurant[]> {
+function findAllRestaurants(options: any): Promise<Restaurant[]> {
   return Restaurant.findAll<Restaurant>({
     limit: parseInt(options.limit),
     offset: options.offset,
@@ -16,8 +16,12 @@ function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
 }
 
 function createRestaurant(restaurant: any) {
+  // const { name, address, phone, zipCode, street, email, category } = restaurant;
   const params = restaurant;
-  return Restaurant.create<Restaurant>(params);
+  return Restaurant.create<Restaurant>({
+    ...restaurant,
+    fk_Rcategory: params.category
+  })
 }
 
 function updateRestaurant(restaurant: Restaurant, id?: string) {

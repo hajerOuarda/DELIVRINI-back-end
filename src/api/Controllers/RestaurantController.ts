@@ -40,7 +40,8 @@ restaurantController.get("/:id", (req: Request, res: Response) => {
 });
 
 restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
-  createRestaurant(req.body)
+  const restaurantField = req.body;
+  createRestaurant(restaurantField)
     .then((resto) => {
       res.status(200).send({
         message: message.restaurant.success.created,
@@ -53,6 +54,7 @@ restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], 
         error: err.message,
       });
     });
+
 });
 restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
