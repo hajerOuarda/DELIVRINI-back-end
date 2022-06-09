@@ -20,7 +20,7 @@ restaurantCategoryController.get(
     const options = paginate(page, size);
     findAllRestaurantCategory(options)
       .then((restaurantCategory: Array<RestaurantCategory>) => {
-        res.send({ restaurantCategories_list:  restaurantCategory });
+        res.send(restaurantCategory);
       })
       .catch((err: Error) => {
         res.json(err.message);
@@ -31,7 +31,6 @@ restaurantCategoryController.get(
   "/:id",
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
-
     findOneRestaurantCategory(categoryId)
       .then((category) => {
         if (category) {
@@ -63,9 +62,14 @@ restaurantCategoryController.patch(
     updateRestaurantCategory(req.body, req.params.id)
       .then((nbr) => {
         if (nbr[0] != 0)
-          res.status(200).send({
-            message: message.restaurantCategory.success.updated,
-          });
+          findOneRestaurantCategory(req.params.id).then(
+            (foundRes) => {
+              res.status(200).send({
+                message: message.restaurantCategory.success.updated,
+                updatedCategoryRestaurant: foundRes
+              });
+            }
+          ).catch()
         else
           res.status(401).send({
             message: message.restaurantCategory.error.not_updated,
@@ -81,21 +85,21 @@ restaurantCategoryController.delete(
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
     deleteRestaurantCategory(categoryId)
-       .then((nbr) => {
-      if (nbr)
-        res
-          .status(200)
-          .json({
-            message: message.restaurantCategory.success.deleted,
-            id: categoryId,
+      .then((nbr) => {
+        if (nbr)
+          res
+            .status(200)
+            .json({
+              message: message.restaurantCategory.success.deleted,
+              id: categoryId,
+            });
+        else
+          res.status(404).json({
+            message: message.restaurantCategory.error.not_deleted,
           });
-      else
-        res.status(404).json({
-          message: message.restaurantCategory.error.not_deleted,
-        });
-    })
-    .catch((err: Error) => res.json({ error: err.message }));
- 
+      })
+      .catch((err: Error) => res.json({ error: err.message }));
+
   }
 );
 
