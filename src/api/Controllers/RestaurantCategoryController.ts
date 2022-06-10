@@ -34,7 +34,7 @@ restaurantCategoryController.get(
     findOneRestaurantCategory(categoryId)
       .then((category) => {
         if (category) {
-          return res.status(200).json({ restaurant_found: category });
+          return res.status(200).json({ restaurantCategory_found: category });
         } else
           return res
             .status(404)

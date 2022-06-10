@@ -25,7 +25,7 @@ const configRouters = (): Router => {
   );
   router.use(
     "/mealCategory",
-    [isAuthenticated, checkIsAdmin],
+    [isAuthenticated],
     mealCategoryRouter
   );
   router.use("/meal", [isAuthenticated, checkIsChef], mealRouter);
