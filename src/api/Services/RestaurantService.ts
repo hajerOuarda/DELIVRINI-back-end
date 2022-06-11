@@ -16,8 +16,7 @@ function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
 }
 
 function createRestaurant(restaurant: any) {
-  // const { name, address, phone, zipCode, street, email, category } = restaurant;
-  const params = restaurant;
+   const params = restaurant;
   return Restaurant.create<Restaurant>({
     ...restaurant,
     fk_Rcategory: params.category

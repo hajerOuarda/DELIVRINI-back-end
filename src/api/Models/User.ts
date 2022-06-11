@@ -1,5 +1,6 @@
 import Sequelize, { Model } from "sequelize";
 import my_Database from "../../database/database";
+import { Restaurant } from "./Restaurant";
 import { Role } from "./Role";
 import { Token } from "./Token";
 
@@ -15,6 +16,7 @@ export class User extends Model {
   zipCode!: string;
   street!: string;
   statusDM!: string;
+  restaurant!: string;
 }
 
 User.init(
@@ -64,3 +66,10 @@ User.belongsTo(Role, {
 });
 
 User.hasOne(Token, { foreignKey: "userId" });
+
+User.belongsTo(Restaurant, {
+  foreignKey: "fk_restaurant",
+  onDelete: "SET NULL",
+  targetKey: "name",
+  // constraints:false,
+});
