@@ -18,7 +18,7 @@ mealCategoryController.get("/all", (req: Request, res: Response) => {
   const options = paginate(page, size);
   findAllMealCategory(options)
     .then((mealCategories: Array<MealCategory>) => {
-      res.send({ mealCategories_list: mealCategories });
+      res.send(mealCategories);
     })
     .catch((err: Error) => {
       res.json(err.message);

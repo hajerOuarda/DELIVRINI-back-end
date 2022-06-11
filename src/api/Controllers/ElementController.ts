@@ -10,8 +10,8 @@ elementController.get("/all", (req: Request, res: Response) => {
   const page: any = req.query.page; // page number
   const options = paginate(page, size);
   findAllElement(options)
-    .then((meal: Array<Element>) => {
-      res.send({ element_list: meal });
+    .then((elements: Array<Element>) => {
+      res.send(elements);
     })
     .catch((err: Error) => {
       res.json(err.message);
