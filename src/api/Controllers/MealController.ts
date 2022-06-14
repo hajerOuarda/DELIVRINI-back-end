@@ -52,9 +52,13 @@ mealController.patch("/:id", (req: Request, res: Response) => {
   updateMeal(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.meal.success.updated,
-        });
+        findOneMeal(req.params.id).then(
+          (foundMeal) => {
+            res.status(200).send({
+              message: message.meal.success.updated,
+              updatedMeal: foundMeal
+            });
+          }).catch()
       else
         res.status(401).send({
           message: message.meal.error.not_updated,

@@ -49,7 +49,7 @@ restaurantCategoryController.post("/", (req: Request, res: Response) => {
     .then((category: any) => {
       res.send({
         message: message.restaurantCategory.success.created,
-        restaurant: category,
+        restaurantCategory: category,
       });
     })
     .catch((err: Error) => {

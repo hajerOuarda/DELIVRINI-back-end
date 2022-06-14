@@ -55,9 +55,13 @@ mealCategoryController.patch("/:id", (req: Request, res: Response) => {
   updateMealCategory(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0] != 0)
-        res.status(200).send({
-          message: message.mealCategory.success.updated,
-        });
+        findOneMealCategory(req.params.id).then(
+          (foundMealCategory) => {
+            res.status(200).send({
+              message: message.mealCategory.success.updated,
+              updatedMealCategory: foundMealCategory
+            })
+          }).catch()
       else
         res.status(401).send({
           message: message.mealCategory.error.not_updated,
