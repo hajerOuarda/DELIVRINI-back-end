@@ -1,11 +1,14 @@
 import Sequelize, { Model } from "sequelize";
 import my_Database from "../../database/database";
- 
+
+
+//Element or Item 
 export class Element extends Model {
   name!: string;
   description!: string;
   image!: string;
   quantity!: string;
+  price!: string
 }
 
 Element.init(
@@ -22,6 +25,9 @@ Element.init(
       type: Sequelize.STRING,
     },
     quantity: {
+      type: Sequelize.STRING,
+    },
+    price: {
       type: Sequelize.STRING,
     },
   },
