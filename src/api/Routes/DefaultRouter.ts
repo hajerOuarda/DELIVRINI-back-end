@@ -17,7 +17,7 @@ const configRouters = (): Router => {
   })
 
   router.use("/user", userRouter);
-  router.use("/restaurants", [isAuthenticated, checkIsAdmin], restaurantRouter);
+  router.use("/restaurants",  restaurantRouter);
   router.use(
     "/restaurantCategory",
     [isAuthenticated, checkIsAdmin],
