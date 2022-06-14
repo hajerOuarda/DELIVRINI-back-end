@@ -61,7 +61,7 @@ restaurantCategoryController.patch(
   (req: Request, res: Response) => {
     updateRestaurantCategory(req.body, req.params.id)
       .then((nbr) => {
-        if (nbr[0] != 0)
+        if (nbr[0])
           findOneRestaurantCategory(req.params.id).then(
             (foundRes) => {
               res.status(200).send({
