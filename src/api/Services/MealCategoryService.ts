@@ -17,7 +17,9 @@ function findOneMealCategory(
 
 function createMealCategory(mealCategory: any) {
   const params = mealCategory;
-  return MealCategory.create<MealCategory>(params);
+  return MealCategory.create<MealCategory>({
+    ...mealCategory,
+    fk_restaurant: params.restaurant});
 }
 
 function updateMealCategory(mealCategory: MealCategory, id?: string) {

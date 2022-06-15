@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
+import { isAuthenticated } from "../middlewares/auth";
+import { checkIsChef } from "../middlewares/rolesJwt";
 import { paginate } from "../middlewares/validators";
 import { Ingredients } from "../Models/Association";
 import { createIngredients, deleteIngredients, findAllIngredients, findOneIngredients, updateIngredients } from "../Services/IngredientsService";
@@ -18,7 +20,7 @@ ingredientsController.get("/all", (req: Request, res: Response) => {
         });
 });
 
-ingredientsController.get("/:id", (req: Request, res: Response) => {
+ingredientsController.get("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     const ingredientsId = req.params.id;
 
     findOneIngredients(ingredientsId)
@@ -31,8 +33,8 @@ ingredientsController.get("/:id", (req: Request, res: Response) => {
         .catch((err: Error) => res.status(500).json(err.message));
 });
 
-ingredientsController.post("/", (req: Request, res: Response) => {
-    const  ingredientsField=req.body
+ingredientsController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
+    const ingredientsField = req.body
     createIngredients(ingredientsField)
         .then((ingredients) => {
             res.send({
@@ -47,7 +49,7 @@ ingredientsController.post("/", (req: Request, res: Response) => {
             });
         });
 });
-ingredientsController.patch("/:id", (req: Request, res: Response) => {
+ingredientsController.patch("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     updateIngredients(req.body, req.params.id)
         .then((nbr) => {
             if (nbr[0])
@@ -68,7 +70,7 @@ ingredientsController.patch("/:id", (req: Request, res: Response) => {
             res.status(500).json(err.message);
         });
 });
-ingredientsController.delete("/:id", (req: Request, res: Response) => {
+ingredientsController.delete("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     const ingredientsId = req.params.id;
     deleteIngredients(ingredientsId)
         .then((nbr) => {

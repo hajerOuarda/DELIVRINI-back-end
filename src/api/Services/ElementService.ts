@@ -1,6 +1,6 @@
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
-import { Element } from  "../Models/Association";
+import { Element } from "../Models/Association";
 
 async function findAllElement(options: any): Promise<Element[]> {
   return await Element.findAll<Element>({
@@ -15,7 +15,12 @@ async function findOneElement(elementId: string): Promise<Element | null> {
 
 async function createElement(element: any) {
   const params = element;
-  return await Element.create<Element>(params);
+  return await Element.create<Element>({
+    ...params,
+    fk_restaurant: params.restaurant,
+    fk_Mealcategory: params.mealCategory
+
+  });
 }
 
 async function updateElement(element: Element, id?: string) {
@@ -39,10 +44,10 @@ async function deleteElement(element: string) {
   return await Element.destroy(options);
 }
 
-export{
-    findAllElement,
-    findOneElement,
-    createElement,
-    updateElement,
-    deleteElement
+export {
+  findAllElement,
+  findOneElement,
+  createElement,
+  updateElement,
+  deleteElement
 }

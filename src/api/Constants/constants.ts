@@ -118,4 +118,18 @@ export const message = {
       not_deleted: "ingredients doesn't exist to be deleted",
     },
   },
+  extras: {
+    success: {
+      found: "extras found ",
+      updated: "** extras succesfully updated ** ",
+      created: "** extras succesfully created **",
+      deleted: "** extras succesfully deleted , with id :",
+    },
+    error: {
+      not_found: "extras not found :( ",
+      not_updated: "** no extras found to  update **",
+      not_created: " extras is not created",
+      not_deleted: "extras doesn't exist to be deleted",
+    },
+  },
 };

@@ -12,7 +12,11 @@ Restaurant.belongsTo(RestaurantCategory, {
   onDelete: "SET NULL",
   targetKey: "name",
 });
-
+MealCategory.belongsTo(Restaurant, {
+  foreignKey: "fk_restaurant",
+  onDelete: "SET NULL",
+  targetKey: "name",
+});
 /**  Elemnt & MealCategory */
 Element.belongsTo(MealCategory, {
   foreignKey: "fk_Mealcategory",
@@ -43,5 +47,10 @@ Ingredients.belongsTo(Element, {
   targetKey: "name",
 });
 
+Extras.belongsTo(Element, {
+  foreignKey: "fk_element",
+  onDelete: "SET NULL",
+  targetKey: "name",
+});
 
-export { Element, Meal, Restaurant, MealCategory, RestaurantCategory, Ingredients };
+export { Element, Meal, Restaurant, MealCategory, RestaurantCategory, Ingredients, Extras };

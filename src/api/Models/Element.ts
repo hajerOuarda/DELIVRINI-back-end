@@ -24,9 +24,9 @@ Element.init(
     image: {
       type: Sequelize.STRING,
     },
-    quantity: {
-      type: Sequelize.STRING,
-    },
+    // quantity: {
+    //   type: Sequelize.STRING,
+    // },
     price: {
       type: Sequelize.STRING,
     },
