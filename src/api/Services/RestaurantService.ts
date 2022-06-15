@@ -1,5 +1,3 @@
-/** CRUD  */
-
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Restaurant } from "../Models/Association";

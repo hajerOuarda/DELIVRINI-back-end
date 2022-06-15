@@ -1,5 +1,7 @@
 import { Router, Response, Request } from "express";
 import { message } from "../Constants/constants";
+import { isAuthenticated } from "../middlewares/auth";
+import { checkIsChef } from "../middlewares/rolesJwt";
 import { paginate } from "../middlewares/validators";
 import { MealCategory } from "../Models/Association";
 import {
@@ -24,7 +26,7 @@ mealCategoryController.get("/all", (req: Request, res: Response) => {
       res.json(err.message);
     });
 });
-mealCategoryController.get("/:id", (req: Request, res: Response) => {
+mealCategoryController.get("/:id", [isAuthenticated,checkIsChef], (req: Request, res: Response) => {
   const mealCategoryId = req.params.id;
 
   findOneMealCategory(mealCategoryId)
@@ -39,7 +41,7 @@ mealCategoryController.get("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.status(500).json(err.message));
 });
 
-mealCategoryController.post("/", (req: Request, res: Response) => {
+mealCategoryController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
   createMealCategory(req.body)
     .then((mealCategory: any) => {
       res.send({
@@ -51,7 +53,7 @@ mealCategoryController.post("/", (req: Request, res: Response) => {
       res.status(500).json(err.message);
     });
 });
-mealCategoryController.patch("/:id", (req: Request, res: Response) => {
+mealCategoryController.patch("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
   updateMealCategory(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0] != 0)
@@ -71,7 +73,7 @@ mealCategoryController.patch("/:id", (req: Request, res: Response) => {
       res.status(500).json(err.message);
     });
 });
-mealCategoryController.delete("/:id", (req: Request, res: Response) => {
+mealCategoryController.delete("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
   const mealCategoryId = req.params.id;
   deleteMealCategory(mealCategoryId)
     .then((nbr) => {

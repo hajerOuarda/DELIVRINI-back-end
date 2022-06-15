@@ -33,10 +33,10 @@ Extras.belongsTo(Element, {
   targetKey: "name",
 });
 // element and ingredient
-Element.hasMany(Ingredients, {
-  foreignKey: "fk_element",
-  onDelete: "SET NULL",
-});
+// Element.hasMany(Ingredients, {
+//   foreignKey: "fk_element",
+//   onDelete: "SET NULL",
+// });
 Ingredients.belongsTo(Element, {
   foreignKey: "fk_element",
   onDelete: "SET NULL",

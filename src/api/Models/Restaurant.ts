@@ -9,6 +9,7 @@ export class Restaurant extends Model {
   zipCode!: string;
   street!: string;
   phone!: string;
+  image!:string
 }
 
 Restaurant.init(
@@ -33,6 +34,9 @@ Restaurant.init(
       type: Sequelize.STRING,
     },
     phone: {
+      type: Sequelize.STRING,
+    },
+    image: {
       type: Sequelize.STRING,
     },
   },

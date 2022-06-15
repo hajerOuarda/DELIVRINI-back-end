@@ -1,5 +1,7 @@
 import { Router, Response, Request } from "express";
 import { message } from "../Constants/constants";
+import { isAuthenticated } from "../middlewares/auth";
+import { checkIsAdmin } from "../middlewares/rolesJwt";
 import { paginate } from "../middlewares/validators";
 import { RestaurantCategory } from "../Models/Association";
 import {
@@ -29,6 +31,7 @@ restaurantCategoryController.get(
 );
 restaurantCategoryController.get(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
     findOneRestaurantCategory(categoryId)
@@ -44,7 +47,8 @@ restaurantCategoryController.get(
   }
 );
 
-restaurantCategoryController.post("/", (req: Request, res: Response) => {
+restaurantCategoryController.post("/",
+  [isAuthenticated, checkIsAdmin],(req: Request, res: Response) => {
   createRestaurantCategory(req.body)
     .then((category: any) => {
       res.send({
@@ -58,6 +62,7 @@ restaurantCategoryController.post("/", (req: Request, res: Response) => {
 });
 restaurantCategoryController.patch(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     updateRestaurantCategory(req.body, req.params.id)
       .then((nbr) => {
@@ -82,6 +87,7 @@ restaurantCategoryController.patch(
 );
 restaurantCategoryController.delete(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
     deleteRestaurantCategory(categoryId)

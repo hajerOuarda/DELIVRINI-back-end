@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import { isAuthenticated } from "../middlewares/auth";
 import { checkIsAdmin, checkIsChef } from "../middlewares/rolesJwt";
 import elementRouter from "./ElementRouter";
+import IngredientsRouter from "./IngredientsRouter";
 import mealCategoryRouter from "./MealCategoryRouter";
 import mealRouter from "./MealRouter";
 
@@ -20,15 +21,16 @@ const configRouters = (): Router => {
   router.use("/restaurants",  restaurantRouter);
   router.use(
     "/restaurantCategory",
-    [isAuthenticated, checkIsAdmin],
     restaurantCategoryRouter
   );
   router.use(
     "/mealCategory",
-    [isAuthenticated],
+   
     mealCategoryRouter
   );
   router.use("/meal", [isAuthenticated, checkIsChef], mealRouter);
+  router.use("/ingredients", [isAuthenticated, checkIsChef], IngredientsRouter);
+
   router.use("/element", [isAuthenticated, checkIsChef], elementRouter);
 
 

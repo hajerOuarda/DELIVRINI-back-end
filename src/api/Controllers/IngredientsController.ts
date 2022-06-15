@@ -32,7 +32,8 @@ ingredientsController.get("/:id", (req: Request, res: Response) => {
 });
 
 ingredientsController.post("/", (req: Request, res: Response) => {
-    createIngredients(req.body)
+    const  ingredientsField=req.body
+    createIngredients(ingredientsField)
         .then((ingredients) => {
             res.send({
                 message: message.ingredients.success.created,

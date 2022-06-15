@@ -1,6 +1,6 @@
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
-import { Ingredients } from "../Models/Ingredients";
+import { Ingredients } from "../Models/Association";
 
 async function findAllIngredients(options: any): Promise<Ingredients[]> {
     return await Ingredients.findAll<Ingredients>({
@@ -15,7 +15,12 @@ async function findOneIngredients(IngredientsId: string): Promise<Ingredients | 
 
 async function createIngredients(ingredients: any) {
     const params = ingredients;
-    return await Ingredients.create<Ingredients>(params);
+    return await Ingredients.create<Ingredients>(
+        {
+            ...ingredients,
+            fk_element: params.element
+        }
+    );
 }
 
 async function updateIngredients(ingredients: Ingredients, id?: string) {
