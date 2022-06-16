@@ -2,8 +2,11 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { MealCategory } from "../Models/Association";
 
-function findAllMealCategory(options:any): Promise<MealCategory[]> {
+function findAllMealCategory(options:any,restaurant:any): Promise<MealCategory[]> {
   return MealCategory.findAll<MealCategory>({
+    where: {
+      fk_restaurant: restaurant
+    },
     limit: parseInt(options.limit),
     offset: options.offset,
   });

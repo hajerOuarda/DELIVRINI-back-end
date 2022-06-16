@@ -17,8 +17,9 @@ const mealCategoryController = Router();
 mealCategoryController.get("/all", (req: Request, res: Response) => {
   const size: any = req.query.size; // number of records per page, pageSize
   const page: any = req.query.page; // page number
+  const restaurant: any = req.query.restaurant;
   const options = paginate(page, size);
-  findAllMealCategory(options)
+  findAllMealCategory(options, restaurant)
     .then((mealCategories: Array<MealCategory>) => {
       res.send(mealCategories);
     })
