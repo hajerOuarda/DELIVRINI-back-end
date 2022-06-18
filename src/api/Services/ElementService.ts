@@ -8,8 +8,7 @@ export interface ElementAttributs {
   image: string,
   price: string,
   restaurant: string,
-  mealCategory: string,
-
+  fk_MealCategory: string,
 }
 
 async function findAllElement(options: any, restaurant: any): Promise<Element[]> {
@@ -31,7 +30,6 @@ async function createElement(element: ElementAttributs) {
   return await Element.create<Element>({
     ...params,
     fk_restaurant: params.restaurant,
-    fk_Mealcategory: params.mealCategory
 
   });
 }
@@ -45,10 +43,8 @@ async function updateElement(element: ElementAttributs, id?: string) {
     limit: 1,
   };
 
-  return await Element.update({
-    ...params,
-    fk_Mealcategory: params.mealCategory
-  }, options);
+  return await Element.update(
+    params, options);
 }
 
 async function deleteElement(element: string) {

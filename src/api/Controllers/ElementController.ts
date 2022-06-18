@@ -53,11 +53,16 @@ elementController.patch("/:id", (req: Request, res: Response) => {
       if (nbr[0])
         findOneElement(req.params.id).then(
           (foundElement) => {
+            console.log("searching for element ", foundElement);
+            
             res.status(200).send({
               message: message.element.success.updated,
               updatedElement: foundElement
             })
-          }).catch()
+          }).catch((err: Error) => {
+            console.log("error searching for element ")
+            res.status(404).json(message.element.error.not_found);
+          })
 
       else
         res.status(404).send({
@@ -65,7 +70,7 @@ elementController.patch("/:id", (req: Request, res: Response) => {
         })
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err);
     });
 });
 elementController.delete("/:id", (req: Request, res: Response) => {

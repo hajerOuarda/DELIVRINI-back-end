@@ -58,14 +58,16 @@ mealController.patch("/:id", (req: Request, res: Response) => {
               message: message.meal.success.updated,
               updatedMeal: foundMeal
             });
-          }).catch()
+          }).catch((err: Error) => {
+            res.status(404).json(message.meal.error.not_found);
+          })
       else
         res.status(401).send({
           message: message.meal.error.not_updated,
         });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err.message);
     });
 });
 mealController.delete("/:id", (req: Request, res: Response) => {

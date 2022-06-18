@@ -27,7 +27,7 @@ mealCategoryController.get("/all", (req: Request, res: Response) => {
       res.json(err.message);
     });
 });
-mealCategoryController.get("/:id", [isAuthenticated,checkIsChef], (req: Request, res: Response) => {
+mealCategoryController.get("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
   const mealCategoryId = req.params.id;
 
   findOneMealCategory(mealCategoryId)
@@ -64,14 +64,16 @@ mealCategoryController.patch("/:id", [isAuthenticated, checkIsChef], (req: Reque
               message: message.mealCategory.success.updated,
               updatedMealCategory: foundMealCategory
             })
-          }).catch()
+          }).catch((err: Error) => {
+            res.status(404).json(message.mealCategory.error.not_found);
+          })
       else
         res.status(401).send({
           message: message.mealCategory.error.not_updated,
         });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err.message);
     });
 });
 mealCategoryController.delete("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {

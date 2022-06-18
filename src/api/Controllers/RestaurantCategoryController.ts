@@ -74,14 +74,16 @@ restaurantCategoryController.patch(
                 updatedCategoryRestaurant: foundRes
               });
             }
-          ).catch()
+          ).catch((err: Error) => {
+            res.status(404).json(message.restaurantCategory.error.not_found);
+          })
         else
           res.status(401).send({
             message: message.restaurantCategory.error.not_updated,
           });
       })
       .catch((err: Error) => {
-        res.status(500).json(err.message);
+        res.json(err.message);
       });
   }
 );

@@ -41,7 +41,7 @@ restaurantController.get("/:id", [isAuthenticated, checkIsAdmin], (req: Request,
     .catch((err: Error) => res.status(404).json(err.message));
 });
 
-restaurantController.post("/", [isAuthenticated, checkIsAdmin,requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+restaurantController.post("/", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   const restaurantField = req.body;
   createRestaurant(restaurantField)
     .then((resto) => {
@@ -58,7 +58,7 @@ restaurantController.post("/", [isAuthenticated, checkIsAdmin,requireBodyFields(
     });
 
 });
-restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin,requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
@@ -67,7 +67,9 @@ restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin,requireBodyFie
             message: message.restaurant.success.updated,
             updatedRestaurant: foundRes
           });
-        }).catch()
+        }).catch((err: Error) => {
+          res.status(404).json(message.restaurant.error.not_found);
+        })
 
       else
         res.status(404).send({
@@ -75,7 +77,7 @@ restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin,requireBodyFie
         });
     })
     .catch((err: Error) => {
-      res.status(404).json(err.message);
+      res.json(err.message);
     });
 });
 restaurantController.delete("/:id", [isAuthenticated, checkIsAdmin], (req: Request, res: Response) => {
