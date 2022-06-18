@@ -51,13 +51,18 @@ elementController.patch("/:id", (req: Request, res: Response) => {
   updateElement(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.element.success.updated,
-        });
+        findOneElement(req.params.id).then(
+          (foundElement) => {
+            res.status(200).send({
+              message: message.element.success.updated,
+              updatedElement: foundElement
+            })
+          }).catch()
+
       else
-        res.status(401).send({
+        res.status(404).send({
           message: message.element.error.not_updated,
-        });
+        })
     })
     .catch((err: Error) => {
       res.status(500).json(err.message);
