@@ -25,12 +25,12 @@ async function findOneElement(elementId: string): Promise<Element | null> {
   return await Element.findByPk<Element>(elementId);
 }
 
-async function createElement(element: ElementAttributs) {
+async function createElement(element: any) {
   const params = element;
+
   return await Element.create<Element>({
     ...params,
     fk_restaurant: params.restaurant,
-
   });
 }
 
@@ -43,8 +43,7 @@ async function updateElement(element: ElementAttributs, id?: string) {
     limit: 1,
   };
 
-  return await Element.update(
-    params, options);
+  return await Element.update( params , options);
 }
 
 async function deleteElement(element: string) {

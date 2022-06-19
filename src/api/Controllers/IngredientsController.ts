@@ -30,7 +30,7 @@ ingredientsController.get("/:id", [isAuthenticated, checkIsChef], (req: Request,
             } else
                 return res.status(404).json({ errors: message.ingredients.error.not_found });
         })
-        .catch((err: Error) => res.status(500).json(err.message));
+        .catch((err: Error) => res.status(404).json(err.message));
 });
 
 ingredientsController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ ingredientsController.patch("/:id", [isAuthenticated, checkIsChef], (req: Reques
                 });
         })
         .catch((err: Error) => {
-            res.status(500).json(err.message);
+            res.status(404).json(err.message);
         });
 });
 ingredientsController.delete("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {

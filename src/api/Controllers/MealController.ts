@@ -30,7 +30,7 @@ mealController.get("/:id", (req: Request, res: Response) => {
           .status(404)
           .json({ errors: message.meal.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => res.status(404).json(err.message));
 });
 
 mealController.post("/", (req: Request, res: Response) => {

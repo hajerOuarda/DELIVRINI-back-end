@@ -25,7 +25,7 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
         });
       });
   } catch (error:any) {
-      res.status(500).json({
+      res.status(404).json({
       message: "Invalid Token! ",
       error:error.message
       

@@ -23,7 +23,7 @@ userController.get("/all", (req: Request, res: Response) => {
       res.send({ usersList: users });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 userController.get("/:id", (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ userController.get("/:id", (req: Request, res: Response) => {
       } else res.status(404).json({ errors: message.user.error.not_found });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 
@@ -47,7 +47,7 @@ userController.post("/", (req: Request, res: Response) => {
       });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 userController.patch("/:id", (req: Request, res: Response) => {

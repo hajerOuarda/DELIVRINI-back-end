@@ -29,13 +29,13 @@ elementController.get("/:id", (req: Request, res: Response) => {
       } else
         return res.status(404).json({ errors: message.element.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => res.status(404).json(err.message));
 });
 
 elementController.post("/", (req: Request, res: Response) => {
   createElement(req.body)
     .then((element) => {
-      res.send({
+       res.send({
         message: message.element.success.created,
         element: element,
       });

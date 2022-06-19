@@ -178,7 +178,7 @@ const requestPasswordReset = async (req: Request, res: Response) => {
         check_link: url,
       });
     } else {
-      res.status(500).json({
+      res.status(403).json({
         message: "error sending the email",
       });
     }

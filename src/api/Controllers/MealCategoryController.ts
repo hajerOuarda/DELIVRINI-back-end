@@ -39,7 +39,7 @@ mealCategoryController.get("/:id", [isAuthenticated, checkIsChef], (req: Request
           .status(404)
           .json({ errors: message.mealCategory.error.not_found });
     })
-    .catch((err: Error) => res.status(500).json(err.message));
+    .catch((err: Error) => res.status(404).json(err.message));
 });
 
 mealCategoryController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
@@ -51,7 +51,7 @@ mealCategoryController.post("/", [isAuthenticated, checkIsChef], (req: Request, 
       });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 mealCategoryController.patch("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {

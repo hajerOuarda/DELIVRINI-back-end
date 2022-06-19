@@ -43,7 +43,7 @@ restaurantCategoryController.get(
             .status(404)
             .json({ errors: message.restaurantCategory.error.not_found });
       })
-      .catch((err: Error) => res.status(500).json(err.message));
+      .catch((err: Error) => res.status(404).json(err.message));
   }
 );
 
@@ -57,7 +57,7 @@ restaurantCategoryController.post("/",
       });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.status(404).json(err.message);
     });
 });
 restaurantCategoryController.patch(

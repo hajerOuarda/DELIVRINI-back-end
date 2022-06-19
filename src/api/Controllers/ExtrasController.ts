@@ -28,7 +28,7 @@ extrasController.get("/:id", (req: Request, res: Response) => {
             } else
                 return res.status(404).json({ errors: message.extras.error.not_found });
         })
-        .catch((err: Error) => res.status(500).json(err.message));
+        .catch((err: Error) => res.status(404).json(err.message));
 });
 
 extrasController.post("/", (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ extrasController.patch("/:id", (req: Request, res: Response) => {
                 });
         })
         .catch((err: Error) => {
-            res.status(500).json(err.message);
+            res.status(404).json(err.message);
         });
 });
 extrasController.delete("/:id", (req: Request, res: Response) => {
