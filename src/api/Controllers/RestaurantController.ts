@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
 import { isAuthenticated } from "../middlewares/auth";
 import { checkIsAdmin } from "../middlewares/rolesJwt";
-import { paginate, requireBodyFields } from "../middlewares/validators";
+import { paginate } from "../middlewares/validators";
 import { Restaurant } from "../Models/Association";
 import {
   createRestaurant,
@@ -41,8 +41,10 @@ restaurantController.get("/:id", [isAuthenticated, checkIsAdmin], (req: Request,
     .catch((err: Error) => res.status(404).json(err.message));
 });
 
-restaurantController.post("/", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+restaurantController.post("/", [isAuthenticated, checkIsAdmin], (req: Request, res: Response) => {
   const restaurantField = req.body;
+  console.log("test---------------", restaurantField);
+
   createRestaurant(restaurantField)
     .then((resto) => {
       res.status(200).send({
@@ -58,7 +60,7 @@ restaurantController.post("/", [isAuthenticated, checkIsAdmin, requireBodyFields
     });
 
 });
-restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])

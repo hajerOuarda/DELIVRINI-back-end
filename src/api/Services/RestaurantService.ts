@@ -2,6 +2,18 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Restaurant } from "../Models/Association";
 
+export interface RestaurantAttributs {
+  id: number
+  name: string;
+  email: string
+  address: string;
+  zipCode: string;
+  street: string;
+  phone: string;
+  image: string
+  fk_Rcategory: string,
+}
+
 function findAllRestaurants(options: any): Promise<Restaurant[]> {
   return Restaurant.findAll<Restaurant>({
     limit: parseInt(options.limit),
@@ -14,14 +26,12 @@ function findOneRestaurant(restoId: string): Promise<Restaurant | null> {
 }
 
 function createRestaurant(restaurant: any) {
-   const params = restaurant;
-  return Restaurant.create<Restaurant>({
-    ...restaurant,
-    fk_Rcategory: params.category
-  })
+  const params = restaurant;
+
+  return Restaurant.create<Restaurant>(params)
 }
 
-function updateRestaurant(restaurant: Restaurant, id?: string) {
+function updateRestaurant(restaurant: RestaurantAttributs, id?: string) {
   const restoId = id;
   const params = restaurant;
 
