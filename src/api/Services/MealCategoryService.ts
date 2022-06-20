@@ -2,7 +2,7 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { MealCategory } from "../Models/Association";
 
-function findAllMealCategory(options:any,restaurant:any): Promise<MealCategory[]> {
+function findAllMealCategory(options: any, restaurant: any): Promise<MealCategory[]> {
   return MealCategory.findAll<MealCategory>({
     where: {
       fk_restaurant: restaurant
@@ -20,9 +20,11 @@ function findOneMealCategory(
 
 function createMealCategory(mealCategory: any) {
   const params = mealCategory;
+
   return MealCategory.create<MealCategory>({
-    ...mealCategory,
-    fk_restaurant: params.restaurant});
+    ...params,
+    fk_restaurant: params.restaurant
+  });
 }
 
 function updateMealCategory(mealCategory: MealCategory, id?: string) {

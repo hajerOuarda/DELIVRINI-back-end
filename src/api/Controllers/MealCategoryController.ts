@@ -45,7 +45,7 @@ mealCategoryController.get("/:id", [isAuthenticated, checkIsChef], (req: Request
 mealCategoryController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
   createMealCategory(req.body)
     .then((mealCategory: any) => {
-      res.send({
+      res.status(200).send({
         message: message.mealCategory.success.created,
         mealCategory: mealCategory,
       });
