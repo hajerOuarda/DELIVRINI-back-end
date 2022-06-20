@@ -20,7 +20,7 @@ userController.get("/all", (req: Request, res: Response) => {
 
   findAllUsers(options)
     .then((users: Array<User>) => {
-      res.send({ usersList: users });
+      res.send(users);
     })
     .catch((err: Error) => {
       res.status(404).json(err.message);
