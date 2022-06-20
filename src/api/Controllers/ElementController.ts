@@ -8,10 +8,11 @@ const elementController = Router();
 elementController.get("/all", (req: Request, res: Response) => {
   const size: any = req.query.size; // number of records per page, pageSize
   const page: any = req.query.page; // page number
+  const restaurant: any = req.query.restaurant;
   const options = paginate(page, size);
-  findAllElement(options)
-    .then((meal: Array<Element>) => {
-      res.send({ element_list: meal });
+  findAllElement(options, restaurant)
+    .then((elements: Array<Element>) => {
+      res.send(elements);
     })
     .catch((err: Error) => {
       res.json(err.message);
@@ -50,16 +51,26 @@ elementController.patch("/:id", (req: Request, res: Response) => {
   updateElement(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.element.success.updated,
-        });
+        findOneElement(req.params.id).then(
+          (foundElement) => {
+            console.log("searching for element ", foundElement);
+            
+            res.status(200).send({
+              message: message.element.success.updated,
+              updatedElement: foundElement
+            })
+          }).catch((err: Error) => {
+            console.log("error searching for element ")
+            res.status(404).json(message.element.error.not_found);
+          })
+
       else
-        res.status(401).send({
+        res.status(404).send({
           message: message.element.error.not_updated,
-        });
+        })
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err);
     });
 });
 elementController.delete("/:id", (req: Request, res: Response) => {

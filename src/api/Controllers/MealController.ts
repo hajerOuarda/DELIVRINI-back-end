@@ -6,12 +6,12 @@ import { createMeal, deleteMeal, findAllMeal, findOneMeal, updateMeal } from "..
 
 const mealController = Router();
 mealController.get("/all", (req: Request, res: Response) => {
-   const size: any = req.query.size; // number of records per page, pageSize
-   const page: any = req.query.page; // page number
-   const options = paginate(page, size);
-  findAllMeal (options)
+  const size: any = req.query.size; // number of records per page, pageSize
+  const page: any = req.query.page; // page number
+  const options = paginate(page, size);
+  findAllMeal(options)
     .then((meal: Array<Meal>) => {
-      res.send({ meal_list: meal });
+      res.send(meal);
     })
     .catch((err: Error) => {
       res.json(err.message);
@@ -52,16 +52,22 @@ mealController.patch("/:id", (req: Request, res: Response) => {
   updateMeal(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
-        res.status(200).send({
-          message: message.meal.success.updated,
-        });
+        findOneMeal(req.params.id).then(
+          (foundMeal) => {
+            res.status(200).send({
+              message: message.meal.success.updated,
+              updatedMeal: foundMeal
+            });
+          }).catch((err: Error) => {
+            res.status(404).json(message.meal.error.not_found);
+          })
       else
         res.status(401).send({
           message: message.meal.error.not_updated,
         });
     })
     .catch((err: Error) => {
-      res.status(500).json(err.message);
+      res.json(err.message);
     });
 });
 mealController.delete("/:id", (req: Request, res: Response) => {

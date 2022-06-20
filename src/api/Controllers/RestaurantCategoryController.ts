@@ -1,5 +1,7 @@
 import { Router, Response, Request } from "express";
 import { message } from "../Constants/constants";
+import { isAuthenticated } from "../middlewares/auth";
+import { checkIsAdmin } from "../middlewares/rolesJwt";
 import { paginate } from "../middlewares/validators";
 import { RestaurantCategory } from "../Models/Association";
 import {
@@ -20,7 +22,7 @@ restaurantCategoryController.get(
     const options = paginate(page, size);
     findAllRestaurantCategory(options)
       .then((restaurantCategory: Array<RestaurantCategory>) => {
-        res.send({ restaurantCategories_list:  restaurantCategory });
+        res.send(restaurantCategory);
       })
       .catch((err: Error) => {
         res.json(err.message);
@@ -29,13 +31,13 @@ restaurantCategoryController.get(
 );
 restaurantCategoryController.get(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
-
     findOneRestaurantCategory(categoryId)
       .then((category) => {
         if (category) {
-          return res.status(200).json({ restaurant_found: category });
+          return res.status(200).json({ restaurantCategory_found: category });
         } else
           return res
             .status(404)
@@ -45,12 +47,13 @@ restaurantCategoryController.get(
   }
 );
 
-restaurantCategoryController.post("/", (req: Request, res: Response) => {
+restaurantCategoryController.post("/",
+  [isAuthenticated, checkIsAdmin],(req: Request, res: Response) => {
   createRestaurantCategory(req.body)
     .then((category: any) => {
       res.send({
         message: message.restaurantCategory.success.created,
-        restaurant: category,
+        restaurantCategory: category,
       });
     })
     .catch((err: Error) => {
@@ -59,43 +62,52 @@ restaurantCategoryController.post("/", (req: Request, res: Response) => {
 });
 restaurantCategoryController.patch(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     updateRestaurantCategory(req.body, req.params.id)
       .then((nbr) => {
-        if (nbr[0] != 0)
-          res.status(200).send({
-            message: message.restaurantCategory.success.updated,
-          });
+        if (nbr[0])
+          findOneRestaurantCategory(req.params.id).then(
+            (foundRes) => {
+              res.status(200).send({
+                message: message.restaurantCategory.success.updated,
+                updatedCategoryRestaurant: foundRes
+              });
+            }
+          ).catch((err: Error) => {
+            res.status(404).json(message.restaurantCategory.error.not_found);
+          })
         else
           res.status(401).send({
             message: message.restaurantCategory.error.not_updated,
           });
       })
       .catch((err: Error) => {
-        res.status(500).json(err.message);
+        res.json(err.message);
       });
   }
 );
 restaurantCategoryController.delete(
   "/:id",
+  [isAuthenticated, checkIsAdmin],
   (req: Request, res: Response) => {
     const categoryId = req.params.id;
     deleteRestaurantCategory(categoryId)
-       .then((nbr) => {
-      if (nbr)
-        res
-          .status(200)
-          .json({
-            message: message.restaurantCategory.success.deleted,
-            id: categoryId,
+      .then((nbr) => {
+        if (nbr)
+          res
+            .status(200)
+            .json({
+              message: message.restaurantCategory.success.deleted,
+              id: categoryId,
+            });
+        else
+          res.status(404).json({
+            message: message.restaurantCategory.error.not_deleted,
           });
-      else
-        res.status(404).json({
-          message: message.restaurantCategory.error.not_deleted,
-        });
-    })
-    .catch((err: Error) => res.json({ error: err.message }));
- 
+      })
+      .catch((err: Error) => res.json({ error: err.message }));
+
   }
 );
 

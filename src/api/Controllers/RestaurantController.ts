@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
+import { isAuthenticated } from "../middlewares/auth";
+import { checkIsAdmin } from "../middlewares/rolesJwt";
 import { paginate, requireBodyFields } from "../middlewares/validators";
 import { Restaurant } from "../Models/Association";
 import {
@@ -24,7 +26,7 @@ restaurantController.get("/all", (req: Request, res: Response) => {
       res.status(404).json(err.message);
     });
 });
-restaurantController.get("/:id", (req: Request, res: Response) => {
+restaurantController.get("/:id", [isAuthenticated, checkIsAdmin], (req: Request, res: Response) => {
   const restoId = req.params.id;
 
   findOneRestaurant(restoId)
@@ -39,8 +41,9 @@ restaurantController.get("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.status(404).json(err.message));
 });
 
-restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
-  createRestaurant(req.body)
+restaurantController.post("/", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+  const restaurantField = req.body;
+  createRestaurant(restaurantField)
     .then((resto) => {
       res.status(200).send({
         message: message.restaurant.success.created,
@@ -53,8 +56,9 @@ restaurantController.post("/", [requireBodyFields(["email", "phone", "name"])], 
         error: err.message,
       });
     });
+
 });
-restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
+restaurantController.patch("/:id", [isAuthenticated, checkIsAdmin, requireBodyFields(["email", "phone", "name"])], (req: Request, res: Response) => {
   updateRestaurant(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
@@ -63,7 +67,9 @@ restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"]
             message: message.restaurant.success.updated,
             updatedRestaurant: foundRes
           });
-        }).catch()
+        }).catch((err: Error) => {
+          res.status(404).json(message.restaurant.error.not_found);
+        })
 
       else
         res.status(404).send({
@@ -71,10 +77,10 @@ restaurantController.patch("/:id", [requireBodyFields(["email", "phone", "name"]
         });
     })
     .catch((err: Error) => {
-      res.status(404).json(err.message);
+      res.json(err.message);
     });
 });
-restaurantController.delete("/:id", (req: Request, res: Response) => {
+restaurantController.delete("/:id", [isAuthenticated, checkIsAdmin], (req: Request, res: Response) => {
   const restoId = req.params.id;
   deleteRestaurant(restoId)
     .then((nbr) => {

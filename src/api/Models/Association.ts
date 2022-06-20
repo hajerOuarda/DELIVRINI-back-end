@@ -1,4 +1,6 @@
 import { Element } from "./Element";
+import { Extras } from "./Extras";
+import { Ingredients } from "./Ingredients";
 import { Meal } from "./Meal";
 import { MealCategory } from "./MealCategory";
 import { Restaurant } from "./Restaurant";
@@ -10,31 +12,45 @@ Restaurant.belongsTo(RestaurantCategory, {
   onDelete: "SET NULL",
   targetKey: "name",
 });
-
-/**  Meal & MealCategory */
-Meal.belongsTo(MealCategory, {
-  foreignKey: "fk_Mcategory",
+MealCategory.belongsTo(Restaurant, {
+  foreignKey: "fk_restaurant",
   onDelete: "SET NULL",
   targetKey: "name",
 });
-/**  Meal & Restaurant */
-Meal.belongsTo(Restaurant, {
+/**  Elemnt & MealCategory */
+Element.belongsTo(MealCategory, {
+  foreignKey: "fk_Mealcategory",
+  onDelete: "SET NULL",
+  targetKey: "name",
+});
+/**  Element & Restaurant */
+Element.belongsTo(Restaurant, {
   foreignKey: "fk_restaurant",
   onDelete: "SET NULL",
   targetKey: "name",
 });
 
-/**  Meal & Element */
-Element.belongsToMany(Meal, {
-  through: "Elements_Meals",
-  foreignKey: "Element",
+
+Extras.belongsTo(Element, {
+  foreignKey: "fk_element",
+  onDelete: "SET NULL",
+  targetKey: "name",
+});
+// element and ingredient
+// Element.hasMany(Ingredients, {
+//   foreignKey: "fk_element",
+//   onDelete: "SET NULL",
+// });
+Ingredients.belongsTo(Element, {
+  foreignKey: "fk_element",
+  onDelete: "SET NULL",
   targetKey: "name",
 });
 
-Meal.belongsToMany(Element, {
-  through: "Elements_Meals",
-  foreignKey: "Meal",
+Extras.belongsTo(Element, {
+  foreignKey: "fk_element",
+  onDelete: "SET NULL",
   targetKey: "name",
 });
 
-export { Element, Meal, Restaurant, MealCategory, RestaurantCategory };
+export { Element, Meal, Restaurant, MealCategory, RestaurantCategory, Ingredients, Extras };

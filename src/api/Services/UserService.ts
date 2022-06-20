@@ -25,7 +25,7 @@ const verifyOptions: VerifyOptions = {
 /** Register user   */
 
 const signup = async (req: Request, res: Response) => {
-  const { name, lastname, phone, email, password, address, zipCode, street, role }: any = req.body;
+  const { name, lastname, phone, email, password, address, zipCode, street, role, restaurant }: any = req.body;
   if (!email || !password) {
     res.status(404).json({ message: "enter email and password " });
   } else {
@@ -49,6 +49,7 @@ const signup = async (req: Request, res: Response) => {
           zipCode: zipCode,
           street: street,
           fk_role: role,
+          fk_restaurant: restaurant,
         });
         try {
           await user.save();
