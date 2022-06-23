@@ -10,8 +10,9 @@ const ingredientsController = Router();
 ingredientsController.get("/all", (req: Request, res: Response) => {
     const size: any = req.query.size; // number of records per page, pageSize
     const page: any = req.query.page; // page number
+    const element: any = req.query.restaurant;
     const options = paginate(page, size);
-    findAllIngredients(options)
+    findAllIngredients(options, element)
         .then((ingredientss: Array<Ingredients>) => {
             res.send(ingredientss);
         })

@@ -2,8 +2,11 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Ingredients } from "../Models/Association";
 
-async function findAllIngredients(options: any): Promise<Ingredients[]> {
+async function findAllIngredients(options: any, element: string): Promise<Ingredients[]> {
     return await Ingredients.findAll<Ingredients>({
+        where: {
+            fk_element: element
+        },
         limit: parseInt(options.limit),
         offset: options.offset,
     });

@@ -43,7 +43,7 @@ async function updateElement(element: ElementAttributs, id?: string) {
     limit: 1,
   };
 
-  return await Element.update( params , options);
+  return await Element.update(params, options);
 }
 
 async function deleteElement(element: string) {
