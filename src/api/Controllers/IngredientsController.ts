@@ -36,6 +36,7 @@ ingredientsController.get("/:id", [isAuthenticated, checkIsChef], (req: Request,
 
 ingredientsController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     const ingredientsField = req.body
+
     createIngredients(ingredientsField)
         .then((ingredients) => {
             res.send({

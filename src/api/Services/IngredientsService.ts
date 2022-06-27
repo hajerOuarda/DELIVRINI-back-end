@@ -16,14 +16,16 @@ async function findOneIngredients(IngredientsId: string): Promise<Ingredients | 
     return await Ingredients.findByPk<Ingredients>(IngredientsId);
 }
 
-async function createIngredients(ingredients: any) {
-    const params = ingredients;
-    return await Ingredients.create<Ingredients>(
-        {
-            ...ingredients,
-            fk_element: params.element
-        }
-    );
+async function createIngredients(params: any) {
+    const ingredients = params.values;
+
+    return await Promise.all(ingredients.map((ingredient: any): Promise<Ingredients | null> =>
+        Ingredients.create<Ingredients>(
+            {
+                name: ingredient,
+                fk_element: params.element
+            }
+        )))
 }
 
 async function updateIngredients(ingredients: Ingredients, id?: string) {
