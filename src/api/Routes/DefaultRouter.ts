@@ -29,7 +29,7 @@ const configRouters = (): Router => {
     mealCategoryRouter
   );
   router.use("/meal", [isAuthenticated, checkIsChef], mealRouter);
-  router.use("/ingredients", IngredientsRouter);
+  router.use("/ingredients", [isAuthenticated, checkIsChef], IngredientsRouter);
   router.use("/extras", [isAuthenticated, checkIsChef], ExtrasRouter);
   router.use("/element", [isAuthenticated, checkIsChef], elementRouter);
 

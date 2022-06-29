@@ -8,11 +8,12 @@ import { createIngredients, deleteIngredients, findAllIngredients, findOneIngred
 
 const ingredientsController = Router();
 ingredientsController.get("/all", (req: Request, res: Response) => {
-    const size: any = req.query.size; // number of records per page, pageSize
-    const page: any = req.query.page; // page number
-    const element: any = req.query.restaurant;
-    const options = paginate(page, size);
-    findAllIngredients(options, element)
+    // const size: any = req.query.size; // number of records per page, pageSize
+    // const page: any = req.query.page; // page number
+    const element: any = req.query.element;
+     
+    // const options = paginate(page, size);
+    findAllIngredients( element)
         .then((ingredientss: Array<Ingredients>) => {
             res.send(ingredientss);
         })
@@ -23,7 +24,6 @@ ingredientsController.get("/all", (req: Request, res: Response) => {
 
 ingredientsController.get("/:id", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     const ingredientsId = req.params.id;
-
     findOneIngredients(ingredientsId)
         .then((ingredients) => {
             if (ingredients) {
@@ -36,7 +36,7 @@ ingredientsController.get("/:id", [isAuthenticated, checkIsChef], (req: Request,
 
 ingredientsController.post("/", [isAuthenticated, checkIsChef], (req: Request, res: Response) => {
     const ingredientsField = req.body
-
+     
     createIngredients(ingredientsField)
         .then((ingredients) => {
             res.send({

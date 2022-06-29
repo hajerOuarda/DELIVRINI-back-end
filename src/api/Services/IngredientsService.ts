@@ -2,13 +2,13 @@ import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Ingredients } from "../Models/Association";
 
-async function findAllIngredients(options: any, element: string): Promise<Ingredients[]> {
+async function findAllIngredients(element: string): Promise<Ingredients[]> {
     return await Ingredients.findAll<Ingredients>({
         where: {
             fk_element: element
         },
-        limit: parseInt(options.limit),
-        offset: options.offset,
+        // limit: parseInt(options.limit),
+        // offset: options.offset,
     });
 }
 
@@ -18,14 +18,15 @@ async function findOneIngredients(IngredientsId: string): Promise<Ingredients | 
 
 async function createIngredients(params: any) {
     const ingredients = params.values;
+     return await Promise.all(ingredients.map((ingredient: any): Promise<Ingredients | null> =>
 
-    return await Promise.all(ingredients.map((ingredient: any): Promise<Ingredients | null> =>
         Ingredients.create<Ingredients>(
             {
                 name: ingredient,
                 fk_element: params.element
             }
-        )))
+        )
+        ))
 }
 
 async function updateIngredients(ingredients: Ingredients, id?: string) {

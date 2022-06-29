@@ -69,7 +69,7 @@ User.hasOne(Token, { foreignKey: "userId" });
 
 User.belongsTo(Restaurant, {
   foreignKey: "fk_restaurant",
-  onDelete: "SET NULL",
+  onDelete: "CASCADE",
   targetKey: "name",
   // constraints:false,
 });
