@@ -7,8 +7,6 @@ async function findAllIngredients(element: string): Promise<Ingredients[]> {
         where: {
             fk_element: element
         },
-        // limit: parseInt(options.limit),
-        // offset: options.offset,
     });
 }
 
@@ -18,15 +16,12 @@ async function findOneIngredients(IngredientsId: string): Promise<Ingredients | 
 
 async function createIngredients(params: any) {
     const ingredients = params.values;
-     return await Promise.all(ingredients.map((ingredient: any): Promise<Ingredients | null> =>
+    const element = params.element
+    ingredients.map((i: any) => i.fk_element = element)
 
-        Ingredients.create<Ingredients>(
-            {
-                name: ingredient,
-                fk_element: params.element
-            }
-        )
-        ))
+    return await Ingredients.bulkCreate<Ingredients>(
+        ingredients
+    )
 }
 
 async function updateIngredients(ingredients: Ingredients, id?: string) {
