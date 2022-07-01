@@ -8,7 +8,7 @@ export interface ElementAttributs {
   image: string,
   price: string,
   restaurant: string,
-  fk_MealCategory: string,
+  fk_Mealcategory: string,
 }
 
 async function findAllElement(options: any, restaurant: any): Promise<Element[]> {
@@ -34,7 +34,7 @@ async function createElement(element: any) {
   });
 }
 
-async function updateElement(element: ElementAttributs, id?: string) {
+async function updateElement(element: any, id?: string) {
   const elementId = id;
   const params = element;
 
@@ -42,7 +42,7 @@ async function updateElement(element: ElementAttributs, id?: string) {
     where: { id: elementId },
     limit: 1,
   };
-
+ 
   return await Element.update(params, options);
 }
 

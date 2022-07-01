@@ -20,7 +20,10 @@ async function createIngredients(params: any) {
     ingredients.map((i: any) => i.fk_element = element)
 
     return await Ingredients.bulkCreate<Ingredients>(
-        ingredients
+        ingredients,
+        {
+            updateOnDuplicate: ["fk_element" ],
+        }
     )
 }
 

@@ -35,7 +35,7 @@ elementController.get("/:id", (req: Request, res: Response) => {
 elementController.post("/", (req: Request, res: Response) => {
   createElement(req.body)
     .then((element) => {
-       res.send({
+      res.send({
         message: message.element.success.created,
         element: element,
       });
@@ -47,21 +47,18 @@ elementController.post("/", (req: Request, res: Response) => {
       });
     });
 });
-elementController.patch("/:id", (req: Request, res: Response) => {
+elementController.patch("/:id", (req: Request, res: Response) => { 
   updateElement(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
         findOneElement(req.params.id).then(
           (foundElement) => {
-            console.log("searching for element ", foundElement);
-            
             res.status(200).send({
               message: message.element.success.updated,
               updatedElement: foundElement
             })
           }).catch((err: Error) => {
-            console.log("error searching for element ")
-            res.status(404).json(message.element.error.not_found);
+             res.status(404).json(message.element.error.not_found);
           })
 
       else
@@ -69,7 +66,7 @@ elementController.patch("/:id", (req: Request, res: Response) => {
           message: message.element.error.not_updated,
         })
     })
-    .catch((err: Error) => {
+    .catch((err: Error) => { 
       res.json(err);
     });
 });
