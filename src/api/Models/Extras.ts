@@ -10,12 +10,12 @@ export class Extras extends Model {
 
 Extras.init(
     {
-        name: {
+        extrasName: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             unique: "extras_name",
         },
-        price: {
+        extrasPrice: {
             type: Sequelize.STRING,
         }
     },
