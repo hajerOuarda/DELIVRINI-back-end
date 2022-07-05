@@ -21,9 +21,7 @@ async function createIngredients(params: any) {
 
     return await Ingredients.bulkCreate<Ingredients>(
         ingredients,
-        {
-            updateOnDuplicate: ["fk_element" ],
-        }
+
     )
 }
 
