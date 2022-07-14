@@ -2,12 +2,12 @@ import Sequelize, { Model } from "sequelize";
 import my_Database from "../../database/database";
 
 export class Ingredients extends Model {
-    name!: string;
+    ingredientName!: string;
 }
 
 Ingredients.init(
     {
-        name: {
+        ingredientName: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: "ingredient_name",
