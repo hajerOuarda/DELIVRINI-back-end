@@ -53,3 +53,12 @@ Thumbs.db
 
 # Keys
 *.key
+
+# JPEG
+*.jpg
+*.jpeg
+*.jpe
+*.jif
+*.jfif
+*.jfi
+*.png

@@ -4,8 +4,8 @@ import my_Database from "../../database/database";
 
 
 export class Extras extends Model {
-    name!: string;
-    price!: string;
+    extrasName!: string;
+    extrasPrice!: string;
 }
 
 Extras.init(

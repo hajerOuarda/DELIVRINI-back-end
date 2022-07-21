@@ -30,17 +30,6 @@ Element.belongsTo(Restaurant, {
   targetKey: "name",
 });
 
-
-Extras.belongsTo(Element, {
-  foreignKey: "fk_element",
-  onDelete: "CASCADE",
-  targetKey: "name",
-});
-// element and ingredient
-// Element.hasMany(Ingredients, {
-//   foreignKey: "fk_element",
-//   onDelete: "CASCADE",
-// });
 Ingredients.belongsTo(Element, {
   foreignKey: "fk_element",
   onDelete: "CASCADE",

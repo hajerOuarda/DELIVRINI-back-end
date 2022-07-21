@@ -16,7 +16,7 @@ Element.init(
     name: {
       type: Sequelize.STRING,
       allowNull: false,
-      // unique: "element_name",
+      unique: "element_name",
     },
     description: {
       type: Sequelize.STRING,

@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { message } from "../Constants/constants";
 import { paginate } from "../middlewares/validators";
 import { Element } from "../Models/Association";
-import { createElement, deleteElement, findAllElement, findOneElement, updateElement } from "../Services/ElementService";
+import { createElement, deleteElement, findAllElement, findOneElement, updateElement, upload } from "../Services/ElementService";
 
 const elementController = Router();
 elementController.get("/all", (req: Request, res: Response) => {
@@ -32,8 +32,18 @@ elementController.get("/:id", (req: Request, res: Response) => {
     .catch((err: Error) => res.status(404).json(err.message));
 });
 
-elementController.post("/", (req: Request, res: Response) => {
-  createElement(req.body)
+elementController.post("/", upload, (req: Request, res: Response) => {
+  let element = {
+    image: req.file?.path,
+    name: req.body.name,
+    description: req.body.description,
+    quantity: req.body.quantity,
+    price: req.body.price,
+    fk_restaurant: req.body.restaurant,
+    fk_Mealcategory: req.body.fk_Mealcategory
+  }
+
+  createElement(element)
     .then((element) => {
       res.send({
         message: message.element.success.created,
@@ -47,7 +57,7 @@ elementController.post("/", (req: Request, res: Response) => {
       });
     });
 });
-elementController.patch("/:id", (req: Request, res: Response) => { 
+elementController.patch("/:id", (req: Request, res: Response) => {
   updateElement(req.body, req.params.id)
     .then((nbr) => {
       if (nbr[0])
@@ -58,7 +68,7 @@ elementController.patch("/:id", (req: Request, res: Response) => {
               updatedElement: foundElement
             })
           }).catch((err: Error) => {
-             res.status(404).json(message.element.error.not_found);
+            res.status(404).json(message.element.error.not_found);
           })
 
       else
@@ -66,7 +76,7 @@ elementController.patch("/:id", (req: Request, res: Response) => {
           message: message.element.error.not_updated,
         })
     })
-    .catch((err: Error) => { 
+    .catch((err: Error) => {
       res.json(err);
     });
 });

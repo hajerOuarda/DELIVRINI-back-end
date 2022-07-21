@@ -5,6 +5,7 @@ import { PORT } from "./api/Constants/constants";
 import defaultRouter from "./api/Routes/DefaultRouter";
 import cors from "cors";
 
+
 export class Application {
   public app: Express;
   constructor() {
@@ -22,6 +23,10 @@ export class Application {
 
     //support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
+
+    //static images folder
+    this.app.use('/Images', express.static('./api/images'))
+    // this.app.use(express.static(__dirname));
   }
 
   run() {

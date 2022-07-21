@@ -1,3 +1,5 @@
+import multer from "multer";
+import path from "path";
 import { DestroyOptions } from "sequelize";
 import { UpdateOptions } from "sequelize";
 import { Element } from "../Models/Association";
@@ -12,6 +14,7 @@ export interface ElementAttributs {
 }
 
 async function findAllElement(options: any, restaurant: any): Promise<Element[]> {
+
   return await Element.findAll<Element>({
     where: {
       fk_restaurant: restaurant
@@ -19,6 +22,7 @@ async function findAllElement(options: any, restaurant: any): Promise<Element[]>
     limit: parseInt(options.limit),
     offset: options.offset,
   });
+
 }
 
 async function findOneElement(elementId: string): Promise<Element | null> {
@@ -27,10 +31,10 @@ async function findOneElement(elementId: string): Promise<Element | null> {
 
 async function createElement(element: any) {
   const params = element;
-
+ 
   return await Element.create<Element>({
     ...params,
-    fk_restaurant: params.restaurant,
+    // fk_restaurant: params.restaurant,
   });
 }
 
@@ -42,7 +46,7 @@ async function updateElement(element: any, id?: string) {
     where: { id: elementId },
     limit: 1,
   };
- 
+
   return await Element.update(params, options);
 }
 
@@ -55,10 +59,27 @@ async function deleteElement(element: string) {
   return await Element.destroy(options);
 }
 
+
+const storage = multer.diskStorage({
+  destination(req, _file, cb) {
+    const dir = '../images/';
+
+    cb(null, path.join(__dirname, '../images/elements'))
+  },
+  filename(_req, file, cb) {
+    cb(null, file.originalname)
+  }
+});
+
+const upload = multer({
+  storage: storage
+}).single('image')
+
 export {
   findAllElement,
   findOneElement,
   createElement,
   updateElement,
-  deleteElement
+  deleteElement,
+  upload, storage
 }

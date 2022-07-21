@@ -9,7 +9,7 @@ Ingredients.init(
     {
         ingredientName: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             unique: "ingredient_name",
         },
     },
